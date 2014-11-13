@@ -32,9 +32,6 @@
     <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Color">
-      <HintPath>..\..\..\Release\Modules\Property\Color.dll</HintPath>
-    </Reference>
     <Reference Include="ColorGradientTypeEditor, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Release\Modules\EffectEditor\ColorGradientTypeEditor.dll</HintPath>
