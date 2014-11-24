@@ -1882,9 +1882,8 @@ namespace Common.Controls.Timeline
             po.CancellationToken = cts.Token;
             po.MaxDegreeOfParallelism = Environment.ProcessorCount;
 
-			int processed = 0;
-			int progress = 0;
-		    try
+			long processed = 0;
+			try
 		    {
 		        if (_blockingElementQueue != null)
 		        {
@@ -1892,8 +1891,7 @@ namespace Common.Controls.Timeline
 		            //foreach (Element element in _blockingElementQueue.GetConsumingEnumerable()) {
 		            Parallel.ForEach(_blockingElementQueue.GetConsumingPartitioner(), po, element =>
 		            {
-						Interlocked.Increment(ref processed);
-						progress = (int)(((float)(processed) / _renderQueueSize) * 100);
+			            Interlocked.Increment(ref processed);
 		                // This will likely never be hit: the blocking element queue above will always block waiting for more
 		                // elements, until it completes because CompleteAdding() is called. At which point it will exit the loop,
 		                // as it will be empty, and this function will terminate normally.
@@ -1905,7 +1903,6 @@ namespace Common.Controls.Timeline
 		                }
 		                try
 		                {
-		                    //Size size = new Size((int) Math.Ceiling(timeToPixels(element.Duration)), element.Row.Height - 1);
 		                    element.RenderElement();
 		                    if (!SuppressInvalidate)
 		                    {
@@ -1919,19 +1916,15 @@ namespace Common.Controls.Timeline
                             //in a task. Reporting progress from Tasks is not well supported until 4.5
                             //With the multi-threading the last element can be processed before the count is 
                             //fully updated
-							if (processed >= _renderQueueSize)
-		                    {
-								_renderQueueSize = 0;
-								processed = 0;
-		                        progress = 100;
-                                if (!SuppressInvalidate)
-                                {
-                                    Invalidate();
-                                    //Invalidate when the queue is empty just to make sure everything is up to date.
-                                }    
-		                    }
-		                    worker.ReportProgress(progress);
-		                    
+							var progress = (int)(((float)(Interlocked.Read(ref processed)) / _renderQueueSize) * 100);
+							worker.ReportProgress(progress);
+			                if (_blockingElementQueue.Count == 0)
+			                {
+				                _renderQueueSize = 0;
+				                Interlocked.Exchange(ref processed, 0);
+				                worker.ReportProgress(100);
+			                }
+			               
 		                }
 		                catch (Exception ex)
 		                {
@@ -2022,14 +2015,16 @@ namespace Common.Controls.Timeline
 
 		private void DrawElement(Graphics g, Row row, Element currentElement, int top)
 		{
-			currentElement.DisplayHeight = (row.Height - 1) / currentElement.StackCount;
-			currentElement.DisplayTop = top + (currentElement.DisplayHeight * currentElement.StackIndex);
-			currentElement.RowTopOffset = currentElement.DisplayHeight * currentElement.StackIndex;
 			int width;
 			bool redBorder = false;
 
 			//Sanity check - it is possible for .DisplayHeight to become zero if there are too many effects stacked.
-			//We set the DisplayHeight to the row height for the currentElement, and change the border to red.
+			//We set the DisplayHeight to the row height for the currentElement, and change the border to red.		
+			currentElement.DisplayHeight = 
+				(currentElement.StackCount != 0) ? ((row.Height - 1) / currentElement.StackCount) : row.Height - 1;
+
+			currentElement.DisplayTop = top + (currentElement.DisplayHeight * currentElement.StackIndex);
+			currentElement.RowTopOffset = currentElement.DisplayHeight * currentElement.StackIndex;
 
 			if (currentElement.DisplayHeight == 0)
 			{
@@ -2037,6 +2032,7 @@ namespace Common.Controls.Timeline
 				currentElement.DisplayHeight = currentElement.Row.Height;
 			}
 
+			
 			if (currentElement.StartTime >= VisibleTimeStart)
 			{
 				if (currentElement.EndTime < VisibleTimeEnd)
