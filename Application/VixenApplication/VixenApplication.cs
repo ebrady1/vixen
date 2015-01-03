@@ -214,40 +214,28 @@ namespace VixenApplication
 		/// <summary>
 		/// Sets the log file paths to the appropriate profile log directory
 		/// </summary>
-		private void SetLogFilePaths() {
-			//string logDirectory = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Vixen 3");
-			string logDirectory = _rootDataDirectory;
-			if (System.IO.Directory.Exists(logDirectory)) {
+		private void SetLogFilePaths()
+		{
+			string logDirectory = System.IO.Path.Combine(_rootDataDirectory, "logs");
+			string archiveDirectory = System.IO.Path.Combine(logDirectory, "archive");
+
+			if (System.IO.Directory.Exists(logDirectory))
+			{
 				NLog.Config.LoggingConfiguration config = NLog.LogManager.Configuration;
-				config.AllTargets.ToList().ForEach(t => {
+				config.AllTargets.ToList().ForEach(t =>
+				{
 					var target = t as NLog.Targets.FileTarget;
-					if (target != null) {
+					if (target != null)
+					{
 
-						var strFileName = target.FileName.ToString().Replace("[VIXENPROFILEDIR]", logDirectory).Replace('/', '\\').Replace("'", "");
-						var strArchiveFileName = target.ArchiveFileName.ToString().Replace("[VIXENPROFILEDIR]", logDirectory).Replace('/', '\\').Replace("'", "");
-
-						target.FileName = strFileName;
-						target.ArchiveFileName = strArchiveFileName;
+						target.FileName = System.IO.Path.Combine(logDirectory, "${level}.log");
+						target.ArchiveFileName = System.IO.Path.Combine(archiveDirectory, "${level}_{#####}.log");
 					}
 				});
 
 				NLog.LogManager.Configuration = config;
 			}
-			//config.AllTargets.ToList().ForEach(t => {
-			//	var target = t as NLog.Targets.FileTarget;
-			//	if (target != null) {
-
-			//		var strFileName = target.FileName.ToString().Replace("[VIXENPROFILEDIR]", _rootDataDirectory).Replace('/', '\\').Replace("'", "");
-			//		var strArchiveFileName = target.ArchiveFileName.ToString().Replace("[VIXENPROFILEDIR]", _rootDataDirectory).Replace('/', '\\').Replace("'", "");
-
-			//		target.FileName = strFileName;
-			//		target.ArchiveFileName = strArchiveFileName;
-
-			//	}
-
-			//});
-
-			}
+		}
 
 		#region IApplication implemetation
 
