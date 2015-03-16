@@ -153,6 +153,12 @@
       <DependentUpon>PictureComboBox.cs</DependentUpon>
     </Compile>
     <Compile Include="PictureComboBoxItem.cs" />
+    <Compile Include="PreviewWaveform.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PreviewWaveform.Designer.cs">
+      <DependentUpon>PreviewWaveform.cs</DependentUpon>
+    </Compile>
     <Compile Include="TimelineControl\BlockingCollectionExtensions.cs" />
     <Compile Include="TimelineControl\DelegateBasedObserver.cs" />
     <Compile Include="TimelineControl\Grid.cs">
@@ -373,6 +379,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ElementTree.resx">
       <DependentUpon>ElementTree.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PreviewWaveform.resx">
+      <DependentUpon>PreviewWaveform.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\WizardForm.resx">
       <DependentUpon>WizardForm.cs</DependentUpon>

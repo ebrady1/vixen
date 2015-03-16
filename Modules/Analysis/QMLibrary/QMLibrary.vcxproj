@@ -185,7 +185,9 @@
     <ClInclude Include="QMFiles\BarBeatTrack.h" />
     <ClInclude Include="QMFiles\dsp\onsets\DetectionFunction.h" />
     <ClInclude Include="QMFiles\maths\MathUtilities.h" />
+    <ClInclude Include="QMFiles\OnsetDetect.h" />
     <ClInclude Include="QMFiles\vamp-plugin-sdk-2.5\vamp-sdk\RealTime.h" />
+    <ClInclude Include="QMNoteOnsets.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VampOutputCtrl.h">
@@ -202,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QMBarBeatTrack.cpp" />
+    <ClCompile Include="QMFiles\OnsetDetect.cpp" />
     <ClCompile Include="QMFiles\vamp-plugin-sdk-2.5\src\vamp-sdk\RealTime.cpp" />
     <ClCompile Include="QMFiles\BarBeatTrack.cpp">
       <AdditionalUsingDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -218,6 +221,7 @@
     <ClCompile Include="QMFiles\dsp\tempotracking\TempoTrackV2.cpp" />
     <ClCompile Include="QMFiles\dsp\transforms\FFT.cpp" />
     <ClCompile Include="QMFiles\maths\MathUtilities.cpp" />
+    <ClCompile Include="QMNoteOnsets.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="VampOutputCtrl.cpp" />
     <ClCompile Include="VampParamCtrl.cpp" />

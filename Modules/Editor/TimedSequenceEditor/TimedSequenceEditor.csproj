@@ -318,6 +318,11 @@
       <Name>BeatsAndBars</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Analysis\NoteOnsets\NoteOnsets.csproj">
+      <Project>{8571d7f9-c27d-4c07-a4ee-1dc4414859a7}</Project>
+      <Name>NoteOnsets</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\App\ColorGradients\ColorGradients.csproj">
       <Project>{1b189b36-02af-4a57-9e1b-6dc833212725}</Project>
       <Name>ColorGradients</Name>

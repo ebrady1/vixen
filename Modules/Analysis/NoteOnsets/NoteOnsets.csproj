@@ -4,22 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B848A227-50AA-4FF7-8B7F-73FE36893485}</ProjectGuid>
+    <ProjectGuid>{8571D7F9-C27D-4C07-A4EE-1DC4414859A7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VixenModules.Analysis.BeatsAndBars</RootNamespace>
-    <AssemblyName>BeatsAndBars</AssemblyName>
+    <RootNamespace>VixenModules.Analysis.NoteOnsets</RootNamespace>
+    <AssemblyName>NoteOnsets</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\..\..\Release\Modules\Analysis\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\..\Release64\Modules\Analysis\</OutputPath>
@@ -30,44 +21,52 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\..\..\Release\Modules\Analysis\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BeatsAndBars.cs" />
-    <Compile Include="BeatsAndBarsDescriptor.cs" />
-    <Compile Include="BeatsAndBarsProgress.cs">
+    <Compile Include="NoteOnsetsDescriptor.cs" />
+    <Compile Include="NoteOnsetsDetectionManager.cs" />
+    <Compile Include="NoteOnsetsModule.cs" />
+    <Compile Include="NoteOnsetsSettings.cs" />
+    <Compile Include="NoteOnsetsSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BeatsAndBarsProgress.Designer.cs">
-      <DependentUpon>BeatsAndBarsProgress.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BeatsAndBarsSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BeatsAndBarsSettings.Designer.cs">
-      <DependentUpon>BeatsAndBarsSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MusicStaff.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MusicStaff.Designer.cs">
-      <DependentUpon>MusicStaff.cs</DependentUpon>
+    <Compile Include="NoteOnsetsSettingsForm.Designer.cs">
+      <DependentUpon>NoteOnsetsSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Controls\Controls.csproj">
@@ -97,27 +96,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="BeatsAndBarsProgress.resx">
-      <DependentUpon>BeatsAndBarsProgress.cs</DependentUpon>
+    <EmbeddedResource Include="NoteOnsetsSettingsForm.resx">
+      <DependentUpon>NoteOnsetsSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BeatsAndBarsSettings.resx">
-      <DependentUpon>BeatsAndBarsSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MusicStaff.resx">
-      <DependentUpon>MusicStaff.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\32ndNote.png" />
-    <EmbeddedResource Include="Resources\eigthnote.png" />
-    <EmbeddedResource Include="Resources\fullstaff.png" />
-    <EmbeddedResource Include="Resources\halfnote.png" />
-    <EmbeddedResource Include="Resources\quarternote.png" />
-    <EmbeddedResource Include="Resources\sixteenthnote.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -135,6 +135,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 			this.toolStripMenuItem_removeAudio = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
 			this.beatBarDetectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.noteOnsetDetectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem_MarkManager = new System.Windows.Forms.ToolStripMenuItem();
 			this.modifySequenceLengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.curveEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1046,7 +1047,8 @@ namespace VixenModules.Editor.TimedSequenceEditor
             this.toolStripMenuItem_associateAudio,
             this.toolStripMenuItem_removeAudio,
             this.toolStripSeparator7,
-            this.beatBarDetectionToolStripMenuItem});
+            this.beatBarDetectionToolStripMenuItem,
+            this.noteOnsetDetectionToolStripMenuItem});
 			this.audioToolStripMenuItem.Name = "audioToolStripMenuItem";
 			this.audioToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
 			this.audioToolStripMenuItem.Text = "Audio";
@@ -1054,7 +1056,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 			// toolStripMenuItem_associateAudio
 			// 
 			this.toolStripMenuItem_associateAudio.Name = "toolStripMenuItem_associateAudio";
-			this.toolStripMenuItem_associateAudio.Size = new System.Drawing.Size(173, 22);
+			this.toolStripMenuItem_associateAudio.Size = new System.Drawing.Size(188, 22);
 			this.toolStripMenuItem_associateAudio.Text = "Associate Audio...";
 			this.toolStripMenuItem_associateAudio.Click += new System.EventHandler(this.toolStripMenuItem_associateAudio_Click);
 			// 
@@ -1062,22 +1064,30 @@ namespace VixenModules.Editor.TimedSequenceEditor
 			// 
 			this.toolStripMenuItem_removeAudio.Enabled = false;
 			this.toolStripMenuItem_removeAudio.Name = "toolStripMenuItem_removeAudio";
-			this.toolStripMenuItem_removeAudio.Size = new System.Drawing.Size(173, 22);
+			this.toolStripMenuItem_removeAudio.Size = new System.Drawing.Size(188, 22);
 			this.toolStripMenuItem_removeAudio.Text = "Remove Audio";
 			this.toolStripMenuItem_removeAudio.Click += new System.EventHandler(this.toolStripMenuItem_removeAudio_Click);
 			// 
 			// toolStripSeparator7
 			// 
 			this.toolStripSeparator7.Name = "toolStripSeparator7";
-			this.toolStripSeparator7.Size = new System.Drawing.Size(170, 6);
+			this.toolStripSeparator7.Size = new System.Drawing.Size(185, 6);
 			// 
 			// beatBarDetectionToolStripMenuItem
 			// 
 			this.beatBarDetectionToolStripMenuItem.Enabled = false;
 			this.beatBarDetectionToolStripMenuItem.Name = "beatBarDetectionToolStripMenuItem";
-			this.beatBarDetectionToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+			this.beatBarDetectionToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
 			this.beatBarDetectionToolStripMenuItem.Text = "Beat/Bar Detection";
 			this.beatBarDetectionToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem_BeatBarDetection_Click);
+			// 
+			// noteOnsetDetectionToolStripMenuItem
+			// 
+			this.noteOnsetDetectionToolStripMenuItem.Enabled = false;
+			this.noteOnsetDetectionToolStripMenuItem.Name = "noteOnsetDetectionToolStripMenuItem";
+			this.noteOnsetDetectionToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+			this.noteOnsetDetectionToolStripMenuItem.Text = "Note Onset Detection";
+			this.noteOnsetDetectionToolStripMenuItem.Click += new System.EventHandler(this.noteOnsetDetectionToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem_MarkManager
 			// 
@@ -1541,5 +1551,6 @@ namespace VixenModules.Editor.TimedSequenceEditor
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_associateAudio;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_removeAudio;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+		private System.Windows.Forms.ToolStripMenuItem noteOnsetDetectionToolStripMenuItem;
 	}
 }

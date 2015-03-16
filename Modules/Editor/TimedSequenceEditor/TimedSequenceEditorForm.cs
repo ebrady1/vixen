@@ -33,6 +33,7 @@ using Vixen.Services;
 using Vixen.Sys;
 using Vixen.Sys.State;
 using VixenModules.Analysis.BeatsAndBars;
+using VixenModules.Analysis.NoteOnsets;
 using VixenModules.App.ColorGradients;
 using VixenModules.Sequence.Timed;
 using WeifenLuo.WinFormsUI.Docking;
@@ -1012,6 +1013,8 @@ namespace VixenModules.Editor.TimedSequenceEditor
 				Audio audio = media as Audio;
 				toolStripMenuItem_removeAudio.Enabled = true;
 				beatBarDetectionToolStripMenuItem.Enabled = true;
+				noteOnsetDetectionToolStripMenuItem.Enabled = true;
+
 				if (audio != null)
 				{
 					if (audio.MediaExists)
@@ -1121,6 +1124,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 			//Disable the menu item
 			toolStripMenuItem_removeAudio.Enabled = false;
 			beatBarDetectionToolStripMenuItem.Enabled = false;
+			noteOnsetDetectionToolStripMenuItem.Enabled = false;
 			toolStripButton_AssociateAudio.ToolTipText = @"Associate Audio";
 
 			SequenceModified();
@@ -1201,6 +1205,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 
 				toolStripMenuItem_removeAudio.Enabled = true;
 				beatBarDetectionToolStripMenuItem.Enabled = true;
+				noteOnsetDetectionToolStripMenuItem.Enabled = true;
 				toolStripButton_AssociateAudio.ToolTipText = string.Format("Associated Audio: {0}", Path.GetFileName(openFileDialog.FileName));
 
 				SequenceModified();
@@ -5267,7 +5272,23 @@ namespace VixenModules.Editor.TimedSequenceEditor
 					_sequence.MarkCollections = 
 						audioFeatures.DoBeatBarDetection(_sequence.MarkCollections);
 
+					MarksForm.PopulateMarkCollectionsList(null);
+					SequenceModified();
+					break;
 
+				}
+			}
+		}
+
+		private void noteOnsetDetectionToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			foreach (IMediaModuleInstance module in _sequence.GetAllMedia())
+			{
+				if (module is Audio)
+				{
+					NoteOnsetsModule audioFeatures = new NoteOnsetsModule((Audio)module);
+					_sequence.MarkCollections =
+						audioFeatures.DoNoteOnsetDetection(_sequence.MarkCollections);
 
 					MarksForm.PopulateMarkCollectionsList(null);
 					SequenceModified();

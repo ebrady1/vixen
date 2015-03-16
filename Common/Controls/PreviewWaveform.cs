@@ -9,15 +9,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Common.Controls.Timeline;
 using VixenModules.Media.Audio;
-using VixenModules.Sequence.Timed;
 
-namespace VixenModules.Analysis.BeatsAndBars
+namespace Common.Controls
 {
 	public partial class PreviewWaveform : UserControl
 	{
 		private Waveform m_waveform;
 		private TimeInfo m_info;
-		
+
 		public PreviewWaveform(Audio audio)
 		{
 			InitializeComponent();
@@ -65,7 +64,7 @@ namespace VixenModules.Analysis.BeatsAndBars
 			set
 			{
 				m_info.TotalTime = value;
-				m_info.TimePerPixel = 
+				m_info.TimePerPixel =
 					new TimeSpan(value.Ticks / m_waveform.Width);
 				Invalidate();
 			}
@@ -92,31 +91,34 @@ namespace VixenModules.Analysis.BeatsAndBars
 
 		private void PreviewWaveform_Paint(object sender, PaintEventArgs e)
 		{
-			var timeStack = new Stack<TimeSpan>(m_intervalMarks);
-			long tpp = m_info.TimePerPixel.Ticks;
-			Pen drawPen = new Pen(Color.Yellow, 2);
-			Point x1 = new Point(0,0);
-			Point x2 = new Point(0,Height);
-
-			if (timeStack.Count > 0)
+			if (m_intervalMarks != null)
 			{
-				long compareVal = timeStack.Pop().Ticks;
+				var timeStack = new Stack<TimeSpan>(m_intervalMarks);
+				long tpp = m_info.TimePerPixel.Ticks;
+				Pen drawPen = new Pen(Color.Yellow, 2);
+				Point x1 = new Point(0, 0);
+				Point x2 = new Point(0, Height);
 
-				for (int j = 0; j < m_waveform.Width; j++)
+				if (timeStack.Count > 0)
 				{
-					if (compareVal <= tpp * j)
-					{
-						x1.X = j;
-						x2.X = j;
+					long compareVal = timeStack.Pop().Ticks;
 
-						e.Graphics.DrawLine(drawPen, x1, x2);
-						if (timeStack.Count == 0)
+					for (int j = 0; j < m_waveform.Width; j++)
+					{
+						if (compareVal <= tpp * j)
 						{
-							break;
+							x1.X = j;
+							x2.X = j;
+
+							e.Graphics.DrawLine(drawPen, x1, x2);
+							if (timeStack.Count == 0)
+							{
+								break;
+							}
+							compareVal = timeStack.Pop().Ticks;
 						}
-						compareVal = timeStack.Pop().Ticks;
 					}
-				}
+				}				
 			}
 		}
 

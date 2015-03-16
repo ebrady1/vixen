@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Common.Controls.Timeline;
+using Common.Controls;
 using QMLibrary;
 using VixenModules.Media.Audio;
 using VixenModules.Sequence.Timed;
