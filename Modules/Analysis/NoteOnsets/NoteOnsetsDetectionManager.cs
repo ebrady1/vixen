@@ -43,10 +43,7 @@ namespace VixenModules.Analysis.NoteOnsets
 				}
 
 				//				plugin.SetParameter("bpb", bbSettings.Settings.BeatsPerBar);
-
-				plugin.Initialise(1,
-					(uint)plugin.GetPreferredStepSize(),
-					(uint)plugin.GetPreferredBlockSize());
+				plugin.Initialise();
 
 				//				retVal = BuildMarkCollections(markCollection, bbSettings.Settings);
 			}

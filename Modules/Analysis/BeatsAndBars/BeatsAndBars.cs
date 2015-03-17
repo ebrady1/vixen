@@ -13,7 +13,7 @@ namespace VixenModules.Analysis.BeatsAndBars
 {
 	public class BeatsAndBars : AnalysisModuleInstanceBase
 	{
-		private ManagedPlugin m_plugin = null;
+		private QMBarBeatTrack m_plugin = null;
 		private IDictionary<int, ICollection<ManagedFeature>> m_featureSet;
 		private Audio m_audioModule = null;
 
@@ -267,7 +267,7 @@ namespace VixenModules.Analysis.BeatsAndBars
 		{
 			BeatBarPreviewData previewData = new BeatBarPreviewData(1);
 			QMBarBeatTrack plugin = new QMBarBeatTrack(m_audioModule.Frequency);
-			plugin.SetParameter("bpb", 4);
+			plugin.SetBeatsPerBar(4);
 
 			plugin.Initialise(1,
 				(uint)plugin.GetPreferredStepSize(),
@@ -383,11 +383,8 @@ namespace VixenModules.Analysis.BeatsAndBars
 				DialogResult result = bbSettings.ShowDialog();
 				if (result == DialogResult.OK)
 				{
-					m_plugin.SetParameter("bpb", bbSettings.Settings.BeatsPerBar);
-
-					m_plugin.Initialise(1,
-						(uint)m_plugin.GetPreferredStepSize(),
-						(uint)m_plugin.GetPreferredBlockSize());
+					m_plugin.SetBeatsPerBar(bbSettings.Settings.BeatsPerBar);
+					m_plugin.Initialise();
 
 					retVal = BuildMarkCollections(markCollection, bbSettings.Settings);
 				}				

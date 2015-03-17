@@ -14,6 +14,13 @@ namespace QMLibrary
 
 	}
 
+	bool ManagedPlugin::Initialise()
+	{
+		return this->Initialise(1,
+			(unsigned int)this->GetPreferredStepSize(),
+			(unsigned int)this->GetPreferredBlockSize());
+	}
+
 	bool ManagedPlugin::Initialise(size_t channels, size_t stepSize, size_t blockSize)
 	{
 		return m_plugin->initialise(channels, stepSize, blockSize);

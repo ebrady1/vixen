@@ -26,7 +26,7 @@ namespace QMLibrary
 			Unknown
 		};
 
-
+		virtual bool Initialise();
 		virtual bool Initialise(size_t channels, size_t stepSize, size_t blockSize);
 		virtual void Reset();
 		virtual System::String^ GetIdentifier();

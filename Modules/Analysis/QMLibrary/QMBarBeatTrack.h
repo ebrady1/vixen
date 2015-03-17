@@ -7,8 +7,9 @@ namespace QMLibrary
 {
 	public ref class QMBarBeatTrack : ManagedPlugin
 	{
-	public:
-		QMBarBeatTrack(float inputSampleRate);
+		public:
+			QMBarBeatTrack(float inputSampleRate);
+			void SetBeatsPerBar(int beatsPerBar);
 	};
 
 }

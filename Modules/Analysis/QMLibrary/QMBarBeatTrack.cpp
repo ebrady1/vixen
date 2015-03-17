@@ -7,5 +7,10 @@ namespace QMLibrary
 	{
 		m_plugin = new BarBeatTracker(inputSampleRate);
 	}
+
+	void QMBarBeatTrack::SetBeatsPerBar(int beatsPerBar)
+	{
+		this->SetParameter("bpb", beatsPerBar);
+	}
 }
 
