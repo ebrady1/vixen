@@ -57,9 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NoteOnsetsDescriptor.cs" />
-    <Compile Include="NoteOnsetsDetectionManager.cs" />
     <Compile Include="NoteOnsetsModule.cs" />
-    <Compile Include="NoteOnsetsSettings.cs" />
     <Compile Include="NoteOnsetsSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>

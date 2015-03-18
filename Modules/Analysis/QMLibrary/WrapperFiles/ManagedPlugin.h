@@ -5,6 +5,7 @@
 #include <ManagedParameter.h>
 #include <ManagedOutput.h>
 #include <ManagedFeature.h>
+#include <ManagedPluginSettings.h>
 
 namespace QMLibrary
 {
@@ -47,6 +48,9 @@ namespace QMLibrary
 		virtual ManagedFeatureSet^ convertToManagedFeatureSet(Vamp::Plugin::FeatureSet unManagedFS);
 		virtual ManagedFeatureSet^ Process(array<float>^ inputBuffer, ManagedRealtime^ timestamp);
 		virtual ManagedFeatureSet^ GetRemainingFeatures();
+		virtual bool SetPluginSettings(ManagedPluginSettings^ settings) = 0;
+		virtual ManagedPluginSettings^ GetPluginSettings() = 0;
+
 	};
 
 

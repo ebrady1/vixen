@@ -55,6 +55,9 @@
       <Filter>Queen Mary Wrapper Files</Filter>
     </ClInclude>
     <ClInclude Include="QMFiles\OnsetDetect.h" />
+    <ClInclude Include="WrapperFiles\ManagedPluginSettings.h">
+      <Filter>Vamp Wrapper Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -119,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="QMFiles\OnsetDetect.cpp">
       <Filter>Queen Mary Plugin Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WrapperFiles\ManagedPluginSettings.cpp">
+      <Filter>Vamp Wrapper Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

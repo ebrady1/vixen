@@ -200,6 +200,7 @@
     <ClInclude Include="WrapperFiles\ManagedOutput.h" />
     <ClInclude Include="WrapperFiles\ManagedParameter.h" />
     <ClInclude Include="WrapperFiles\ManagedPlugin.h" />
+    <ClInclude Include="WrapperFiles\ManagedPluginSettings.h" />
     <ClInclude Include="WrapperFiles\ManagedRealtime.h" />
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +227,7 @@
     <ClCompile Include="VampOutputCtrl.cpp" />
     <ClCompile Include="VampParamCtrl.cpp" />
     <ClCompile Include="WrapperFiles\ManagedPlugin.cpp" />
+    <ClCompile Include="WrapperFiles\ManagedPluginSettings.cpp" />
     <ClCompile Include="WrapperFiles\ManagedRealtime.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -37,7 +37,7 @@ namespace VixenModules.Analysis.BeatsAndBars
 			int i = 0;
 			int j = 0;
 			IDictionary<int, ICollection<ManagedFeature>> retVal = 
-				new ConcurrentDictionary<int, ICollection<ManagedFeature>>();
+				new Dictionary<int, ICollection<ManagedFeature>>();
 
 			BeatsAndBarsProgress progressDlg = new BeatsAndBarsProgress();
 			if (showProgress)
