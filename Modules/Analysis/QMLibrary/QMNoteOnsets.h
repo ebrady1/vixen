@@ -14,7 +14,6 @@ namespace QMLibrary
 		PHASE_DEVIATION = 0x2,
 		COMPLEX_DOMAIN = 0x3,
 		BROADBAND_ENERGY_RISE = 0x4
-
 	} ;
 
 	public ref class QMNoteOnsets : public ManagedPlugin

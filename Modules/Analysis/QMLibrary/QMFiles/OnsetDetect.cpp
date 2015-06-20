@@ -176,14 +176,18 @@ OnsetDetector::setParameter(std::string name, float value)
         default: case 3: dfType = DF_COMPLEXSD; break;
         case 4: dfType = DF_BROADBAND; break;
         }
+		std::cout << "dftype set to " << dfType << endl;
         if (dfType == m_dfType) return;
         m_dfType = dfType;
         m_program = "";
+		
     } else if (name == "sensitivity") {
+		std::cout << "sensitivity set to " << value << endl;
         if (m_sensitivity == value) return;
         m_sensitivity = value;
         m_program = "";
     } else if (name == "whiten") {
+		std::cout << "whiten set to " << value << endl;
         if (m_whiten == (value > 0.5)) return;
         m_whiten = (value > 0.5);
         m_program = "";
@@ -361,9 +365,9 @@ OnsetDetector::process(const float *const *inputBuffers,
 ////    std::cerr << std::endl;
 //    mean /= len;
 
-//    std::cerr << "OnsetDetector::process(" << timestamp << "): "
+//    std::cout << "OnsetDetector::process(" << timestamp << "): "
 //              << "dftype " << m_dfType << ", sens " << m_sensitivity
-//              << ", len " << len << ", mean " << mean << std::endl;
+//              << ", len " << len << ", mean " << 0 << std::endl;
 
     double *magnitudes = new double[len];
     double *phases = new double[len];

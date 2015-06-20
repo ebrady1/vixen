@@ -23,7 +23,8 @@ namespace QMLibrary
 
 	bool QMNoteOnsets::SetSensitivity(int sensitivity)
 	{
-		m_plugin->setParameter("sensitivity", sensitivity);
+		//m_plugin->setParameter("sensitivity", (float)sensitivity / 100.0f);
+		m_plugin->setParameter("sensitivity", (float)sensitivity);
 		return true;
 	}
 

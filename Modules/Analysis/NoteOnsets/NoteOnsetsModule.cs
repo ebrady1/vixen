@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using QMLibrary;
 using Vixen.Module.Analysis;
@@ -35,7 +37,7 @@ namespace VixenModules.Analysis.NoteOnsets
 
 			foreach (ManagedFeature feature in featureSet)
 			{
-				//if (feature.hasTimestamp)
+				if (feature.hasTimestamp)
 				{
 					double featureMS = feature.timestamp.totalMilliseconds();
 					mc.Marks.Add(TimeSpan.FromMilliseconds(featureMS));
@@ -51,6 +53,9 @@ namespace VixenModules.Analysis.NoteOnsets
 			IDictionary<int, ICollection<ManagedFeature>> retVal =
 				new Dictionary<int, ICollection<ManagedFeature>>();
 
+			IDictionary<int, ICollection<ManagedFeature>> debugVal =
+						new Dictionary<int, ICollection<ManagedFeature>>();
+
 //			BeatsAndBarsProgress progressDlg = new BeatsAndBarsProgress();
 			if (showProgress)
 			{
@@ -58,14 +63,29 @@ namespace VixenModules.Analysis.NoteOnsets
 			}
 
 			int stepSize = plugin.GetPreferredStepSize();
+			//int stepSize = plugin.GetPreferredBlockSize();
+			int blockSize = plugin.GetPreferredBlockSize();
+
+			if (blockSize == 0)
+			{
+				if (stepSize != 0)
+				{
+					blockSize = stepSize;
+				}
+				else blockSize = 1024;
+			}
+			if (stepSize == 0)
+			{
+				stepSize = blockSize;
+			}
 
 			double progressVal = 0;
 			uint frequency = (uint)m_audioModule.Frequency;
 			if (frequency != 0)
 			{
-				float[] fSamples = new float[plugin.GetPreferredBlockSize()];
+				float[] fSamples = new float[blockSize];
 				for (j = 0;
-					((fSampleData.Length - j) >= plugin.GetPreferredBlockSize());
+					((fSampleData.Length - j) >= blockSize);
 					j += stepSize)
 				{
 					progressVal = ((double)j / (double)fSampleData.Length) * 100.0;
@@ -73,13 +93,15 @@ namespace VixenModules.Analysis.NoteOnsets
 
 					Array.Copy(fSampleData, j, fSamples, 0, fSamples.Length);
 					plugin.Process(fSamples,
-							ManagedRealtime.frame2RealTime(j, (uint)m_audioModule.Frequency));
+							ManagedRealtime.frame2RealTime(j, (uint)(m_audioModule.Frequency)));
+					
 				}
 
 				Array.Clear(fSamples, 0, fSamples.Length);
 				Array.Copy(fSampleData, j, fSamples, 0, fSampleData.Length - j);
 				plugin.Process(fSamples,
-						ManagedRealtime.frame2RealTime(j, (uint)m_audioModule.Frequency));
+						ManagedRealtime.frame2RealTime(j, (uint)(m_audioModule.Frequency)));
+
 
 //				progressDlg.Close();
 
@@ -108,7 +130,8 @@ namespace VixenModules.Analysis.NoteOnsets
 		public List<MarkCollection> DoNoteOnsetDetection(List<MarkCollection> markCollection)
 		{
 			List<MarkCollection> retVal = new List<MarkCollection>();
-
+			int numConvBits = ((m_audioModule.BytesPerSample / m_audioModule.Channels) * 8) - 1;
+			double convFactor = Math.Pow(2, numConvBits);
 			if (m_audioModule.Channels != 0)
 			{
 				m_plugin = new QMNoteOnsets(m_audioModule.Frequency);
@@ -117,16 +140,19 @@ namespace VixenModules.Analysis.NoteOnsets
 				m_fSamples = new float[m_audioModule.NumberSamples];
 
 				int dataStep = m_audioModule.BytesPerSample;
-
-				for (int j = 0, sampleNum = 0; j < m_bSamples.Length; j += dataStep, sampleNum++)
+				float calcValue = 0;
+				for (int j = 0, sampleNum = 0; j < m_bSamples.Length; j += dataStep, sampleNum ++)
 				{
-					//m_fSamples[sampleNum] = dataStep == 2 ?
-					//	BitConverter.ToInt16(m_bSamples, j) : BitConverter.ToInt32(m_bSamples, j);
+					m_fSamples[sampleNum] = (float)(((double)BitConverter.ToInt16(m_bSamples, j))/convFactor);
+					//m_fSamples[sampleNum] = (float)(((double)BitConverter.ToInt16(m_bSamples, j)));
+					if (m_audioModule.Channels == 2)
+					{
+						m_fSamples[sampleNum] += (float)(((double)BitConverter.ToInt16(m_bSamples, j + 2)) / convFactor);
+						//m_fSamples[sampleNum] = (float)(((double)BitConverter.ToInt16(m_bSamples, j + 2)));
+						m_fSamples[sampleNum] = m_fSamples[sampleNum] / 2.0f;
+					}
 
-					m_fSamples[sampleNum] = dataStep == 2 ?
-						BitConverter.ToInt16(m_bSamples, j) : BitConverter.ToInt16(m_bSamples, j);
 				}
-
 				NoteOnsetsSettingsForm onsetSettings = new NoteOnsetsSettingsForm();
 
 				DialogResult result = onsetSettings.ShowDialog();
@@ -134,8 +160,8 @@ namespace VixenModules.Analysis.NoteOnsets
 				{
 					QMNoteOnsetsSettings settings = onsetSettings.Settings;
 					m_plugin.SetPluginSettings(settings);
-					m_plugin.Initialise();
 
+					m_plugin.Initialise();
 					retVal = BuildMarkCollections(markCollection, onsetSettings.Settings);
 				}	
 			}
