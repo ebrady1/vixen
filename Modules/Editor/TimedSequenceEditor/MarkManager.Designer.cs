@@ -195,13 +195,13 @@
 			this.listViewMarkCollections.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.listViewMarkCollections.HideSelection = false;
 			this.listViewMarkCollections.Location = new System.Drawing.Point(6, 19);
-			this.listViewMarkCollections.MultiSelect = false;
 			this.listViewMarkCollections.Name = "listViewMarkCollections";
 			this.listViewMarkCollections.Size = new System.Drawing.Size(226, 207);
 			this.listViewMarkCollections.TabIndex = 0;
 			this.listViewMarkCollections.UseCompatibleStateImageBehavior = false;
 			this.listViewMarkCollections.View = System.Windows.Forms.View.Details;
 			this.listViewMarkCollections.SelectedIndexChanged += new System.EventHandler(this.listViewMarkCollections_SelectedIndexChanged);
+			this.listViewMarkCollections.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewMarkCollections_KeyDown);
 			// 
 			// columnHeader1
 			// 
@@ -907,9 +907,11 @@
 			// 
 			// MarkManager
 			// 
+			this.AcceptButton = this.buttonOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(732, 625);
+			this.CancelButton = this.buttonCancel;
+			this.ClientSize = new System.Drawing.Size(732, 626);
 			this.Controls.Add(this.groupBoxPlayback);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.groupBoxSelectedMarkCollection);

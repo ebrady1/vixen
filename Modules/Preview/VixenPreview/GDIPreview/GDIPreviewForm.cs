@@ -165,11 +165,15 @@ namespace VixenModules.Preview.VixenPreview
 			}
 
 			gdiControl.BackgroundAlpha = Data.BackgroundAlpha;
-			if (System.IO.File.Exists(Data.BackgroundFileName))
-				gdiControl.Background = Image.FromFile(Data.BackgroundFileName);
-			else
+			if (string.IsNullOrEmpty(Data.BackgroundFileName))
+			{
 				gdiControl.Background = null;
-
+			}
+			else
+			{
+				var file = Path.Combine(VixenPreviewDescriptor.ModulePath, Data.BackgroundFileName);
+				gdiControl.Background = File.Exists(file) ? Image.FromFile(file) : null;
+			}
 			LayoutProps();
 		}
 
