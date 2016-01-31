@@ -1,12 +1,16 @@
 ﻿using System;
 using Vixen.Module.Effect;
 using Vixen.Sys;
+using Vixen.Sys.Attribute;
 
 namespace VixenModules.Effect.CustomEffect
 {
 	public class CustomEffectDescriptor : EffectModuleDescriptorBase
 	{
 		private static readonly Guid _typeId = new Guid("7B00B6B5-6CA8-4709-B90A-BAD14DE119DA");
+		
+		[ModuleDataPath]
+		public static string ModulePath { get; set; }
 
 		public override ParameterSignature Parameters
 		{

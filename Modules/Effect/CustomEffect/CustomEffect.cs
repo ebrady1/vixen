@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using Common.Controls.ColorManagement.ColorModels;
 using Vixen.Attributes;
@@ -27,14 +28,34 @@ namespace VixenModules.Effect.CustomEffect
 		{
 			get
 			{
+				/*
 				if(Colors.Any(x => !x.CheckLibraryReference()))
 				{
 					base.IsDirty = true;
 				}
 
 				return base.IsDirty;
+				 */
+				return true;
 			}
 			protected set { base.IsDirty = value; }
+		}
+		
+		[Value]
+		[ProviderCategory(@"Config", 2)]
+		[ProviderDisplayName(@"Filename")]
+		[ProviderDescription(@"Filename")]
+		[PropertyEditor("CustomEffectPathEditor")]
+		[PropertyOrder(1)]
+		public String FileName
+		{
+			get { return _data.FileName; }
+			set
+			{
+				_data.FileName = ConvertPath(value);
+				IsDirty = true;
+				OnPropertyChanged();
+			}
 		}
 
 		#region Setup
@@ -46,115 +67,6 @@ namespace VixenModules.Effect.CustomEffect
 			set
 			{
 				_data.Orientation = value;
-				IsDirty = true;
-				OnPropertyChanged();
-			}
-		}
-
-		#endregion
-
-		#region Config properties
-
-		[Value]
-		[ProviderCategory(@"Config", 1)]
-		[ProviderDisplayName(@"Direction")]
-		[ProviderDescription(@"Direction")]
-		[PropertyOrder(0)]
-		public CustomEffectDirection Direction
-		{
-			get { return _data.Direction; }
-			set
-			{
-				_data.Direction = value;
-				IsDirty = true;
-				OnPropertyChanged();
-			}
-		}
-
-		[Value]
-		[ProviderCategory(@"Config", 1)]
-		[ProviderDisplayName(@"Iterations")]
-		[ProviderDescription(@"Iterations")]
-		[PropertyEditor("SliderEditor")]
-		[NumberRange(1, 20, 1)]
-		[PropertyOrder(1)]
-		public int Speed
-		{
-			get { return _data.Speed; }
-			set
-			{
-				_data.Speed = value;
-				IsDirty = true;
-				OnPropertyChanged();
-			}
-		}
-
-		[Value]
-		[ProviderCategory(@"Config", 1)]
-		[ProviderDisplayName(@"Repeat")]
-		[ProviderDescription(@"Repeat")]
-		[PropertyEditor("SliderEditor")]
-		[NumberRange(1, 10, 1)]
-		[PropertyOrder(2)]
-		public int Repeat
-		{
-			get { return _data.Repeat; }
-			set
-			{
-				_data.Repeat = value;
-				IsDirty = true;
-				OnPropertyChanged();
-			}
-		}
-
-		[Value]
-		[ProviderCategory(@"Config", 1)]
-		[ProviderDisplayName(@"Highlight")]
-		[ProviderDescription(@"Highlight")]
-		[PropertyOrder(4)]
-		public bool Highlight
-		{
-			get { return _data.Highlight; }
-			set
-			{
-				_data.Highlight = value;
-				IsDirty = true;
-				OnPropertyChanged();
-			}
-		}
-
-		[Value]
-		[ProviderCategory(@"Config", 1)]
-		[ProviderDisplayName(@"Show3D")]
-		[ProviderDescription(@"Show3D")]
-		[PropertyOrder(5)]
-		public bool Show3D
-		{
-			get { return _data.Show3D; }
-			set
-			{
-				_data.Show3D = value;
-				IsDirty = true;
-				OnPropertyChanged();
-			}
-		}
-
-		#endregion
-
-		#region Color properties
-
-
-		[Value]
-		[ProviderCategory(@"Color", 2)]
-		[ProviderDisplayName(@"ColorGradients")]
-		[ProviderDescription(@"Color")]
-		[PropertyOrder(1)]
-		public List<ColorGradient> Colors
-		{
-			get { return _data.Colors; }
-			set
-			{
-				_data.Colors = value;
 				IsDirty = true;
 				OnPropertyChanged();
 			}
@@ -190,6 +102,28 @@ namespace VixenModules.Effect.CustomEffect
 				IsDirty = true;
 			}
 		}
+		
+		private string ConvertPath(string path)
+		{
+			if (string.IsNullOrEmpty(path))
+			{
+				return path;
+			}
+			if (Path.IsPathRooted(path))
+			{
+				return CopyLocal(path);
+			}
+			
+			return path;
+		}
+
+		private string CopyLocal(string path)
+		{
+			string name = Path.GetFileName(path);
+			var destPath = Path.Combine(CustomEffectDescriptor.ModulePath, name);
+			File.Copy(path, destPath, true);
+			return name;
+		}
 
 		protected override void SetupRender()
 		{
@@ -203,6 +137,7 @@ namespace VixenModules.Effect.CustomEffect
 
 		protected override void RenderEffect(int frame, ref PixelFrameBuffer frameBuffer)
 		{
+		/*
 			int x, y, n, colorIdx;
 			int colorcnt = Colors.Count();
 			int barCount = Repeat * colorcnt;
@@ -345,6 +280,7 @@ namespace VixenModules.Effect.CustomEffect
 					}
 				}
 			}
+		*/
 		}
 	}
 }

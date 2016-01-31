@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -13,53 +14,33 @@ namespace VixenModules.Effect.CustomEffect
 	[DataContract]
 	public class CustomEffectData: ModuleDataModelBase
 	{
-
 		public CustomEffectData()
 		{
-			Colors = new List<ColorGradient>{new ColorGradient(Color.Red), new ColorGradient(Color.Lime), new ColorGradient(Color.Blue)};
-			Direction = CustomEffectDirection.Up;
-			Speed = 1;
-			Repeat = 1;
-			LevelCurve = new Curve(new PointPairList(new[] { 0.0, 100.0 }, new[] { 100.0, 100.0 }));
+			FileName = String.Empty;
 			Orientation=StringOrientation.Vertical;
+			LevelCurve = new Curve(new PointPairList(new[] { 0.0, 100.0 }, new[] { 100.0, 100.0 }));
 		}
 
 		[DataMember]
-		public List<ColorGradient> Colors { get; set; }
+		public bool FitToTime { get; set; }
 
 		[DataMember]
-		public CustomEffectDirection Direction { get; set; }
-
-		[DataMember]
-		public int Speed { get; set; }
-
-		[DataMember]
-		public int Repeat { get; set; }
-
-		[DataMember]
-		public bool Highlight { get; set; }
-
-		[DataMember]
-		public bool Show3D { get; set; }
-
-		[DataMember]
-		public Curve LevelCurve { get; set; }
+		public string FileName { get; set; }
 
 		[DataMember]
 		public StringOrientation Orientation { get; set; }
 
+		[DataMember]
+		public Curve LevelCurve { get; set; }
+
 		public override IModuleDataModel Clone()
 		{
-			CustomEffectData result = new CustomEffectData
+			CustomEffectData result = new CustomEffectData 
 			{
-				Colors = Colors.ToList(),
-				Direction = Direction,
-				Speed = Speed,
-				Repeat = Repeat,
+				FitToTime = FitToTime,
 				Orientation = Orientation,
-				Show3D = Show3D,
-				Highlight = Highlight,
-				LevelCurve = new Curve(LevelCurve)
+				LevelCurve = new Curve(LevelCurve),
+				FileName = FileName
 			};
 			return result;
 		}

@@ -46,6 +46,7 @@
     <Compile Include="CustomEffectData.cs" />
     <Compile Include="CustomEffectDescriptor.cs" />
     <Compile Include="CustomEffectDirection.cs" />
+    <Compile Include="FPPDecode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
