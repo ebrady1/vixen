@@ -18,6 +18,7 @@ namespace VixenModules.Effect.CustomEffect
 	public class CustomEffect:PixelEffectBase
 	{
 		private CustomEffectData _data;
+		private FPPDecode _decode = null;
 		
 		public CustomEffect()
 		{
@@ -28,15 +29,7 @@ namespace VixenModules.Effect.CustomEffect
 		{
 			get
 			{
-				/*
-				if(Colors.Any(x => !x.CheckLibraryReference()))
-				{
-					base.IsDirty = true;
-				}
-
 				return base.IsDirty;
-				 */
-				return true;
 			}
 			protected set { base.IsDirty = value; }
 		}
@@ -127,7 +120,23 @@ namespace VixenModules.Effect.CustomEffect
 
 		protected override void SetupRender()
 		{
-			//Nothing to setup
+			if (!string.IsNullOrEmpty(FileName))
+			{
+				var filePath = Path.Combine(CustomEffectDescriptor.ModulePath, FileName);
+				if (File.Exists(filePath))
+				{
+					_decode = new FPPDecode();
+					_decode.Load(filePath);
+				}
+				else
+				{
+					_decode = null;
+				}
+			}
+			else
+			{
+				_decode = null;
+			}
 		}
 
 		protected override void CleanUpRender()
@@ -137,6 +146,26 @@ namespace VixenModules.Effect.CustomEffect
 
 		protected override void RenderEffect(int frame, ref PixelFrameBuffer frameBuffer)
 		{
+			double position = 0;
+			if (null != _decode)
+			{
+				position = (GetEffectTimeIntervalPosition(frame) * 1) % 1;
+				byte[] periodData = _decode.GetPeriodData((UInt32)(position * _decode.SeqNumPeriods));
+
+				int index = 0;
+				for (int y = 0; y < BufferHt; y++)
+				{
+					for (int x = 0; x < BufferWi; x++)
+					{
+						index = ((y * BufferWi) + x) * 3;
+						Color c = Color.FromArgb(periodData[index], periodData[index + 1], periodData[index + 2]);
+						var hsv = HSV.FromRGB(c);
+						hsv.V = hsv.V * LevelCurve.GetValue(position * 100) / 100;
+						frameBuffer.SetPixel(x, y, hsv);
+					}
+				}
+
+			}
 		/*
 			int x, y, n, colorIdx;
 			int colorcnt = Colors.Count();

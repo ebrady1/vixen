@@ -9,6 +9,11 @@ namespace VixenModules.Effect.CustomEffect
 	{
 		private static readonly Guid _typeId = new Guid("7B00B6B5-6CA8-4709-B90A-BAD14DE119DA");
 		
+		public CustomEffectDescriptor()
+		{
+			ModulePath = EffectName;
+		}
+		
 		[ModuleDataPath]
 		public static string ModulePath { get; set; }
 
