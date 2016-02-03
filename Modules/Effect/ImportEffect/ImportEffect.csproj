@@ -7,8 +7,8 @@
     <ProjectGuid>{4D919C14-5E24-4CDE-A1AC-FF3A0349EF93}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VixenModules.Effect.CutomEffect</RootNamespace>
-    <AssemblyName>CustomEffect</AssemblyName>
+    <RootNamespace>VixenModules.Effect.ImportEffect</RootNamespace>
+    <AssemblyName>ImportEffect</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -42,10 +42,9 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomEffect.cs" />
-    <Compile Include="CustomEffectData.cs" />
-    <Compile Include="CustomEffectDescriptor.cs" />
-    <Compile Include="CustomEffectDirection.cs" />
+    <Compile Include="ImportEffect.cs" />
+    <Compile Include="ImportEffectData.cs" />
+    <Compile Include="ImportEffectDescriptor.cs" />
     <Compile Include="ESEQDecode.cs" />
     <Compile Include="FSEQDecode.cs" />
     <Compile Include="IFileDecode.cs" />

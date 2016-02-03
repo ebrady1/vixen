@@ -13,16 +13,16 @@ using VixenModules.App.Curves;
 using VixenModules.Effect.Pixel;
 using VixenModules.EffectEditor.EffectDescriptorAttributes;
 
-namespace VixenModules.Effect.CustomEffect
+namespace VixenModules.Effect.ImportEffect
 {
-	public class CustomEffect:PixelEffectBase
+	public class ImportEffect:PixelEffectBase
 	{
-		private CustomEffectData _data;
+		private ImportEffectData _data;
 		private IFileDecode _decode = null;
 		
-		public CustomEffect()
+		public ImportEffect()
 		{
-			_data = new CustomEffectData();
+			_data = new ImportEffectData();
 		}
 
 		public override bool IsDirty
@@ -38,7 +38,7 @@ namespace VixenModules.Effect.CustomEffect
 		[ProviderCategory(@"Config", 2)]
 		[ProviderDisplayName(@"Filename")]
 		[ProviderDescription(@"Filename")]
-		[PropertyEditor("CustomEffectPathEditor")]
+		[PropertyEditor("ImportEffectPathEditor")]
 		[PropertyOrder(1)]
 		public String FileName
 		{
@@ -91,7 +91,7 @@ namespace VixenModules.Effect.CustomEffect
 			get { return _data; }
 			set
 			{
-				_data = value as CustomEffectData;
+				_data = value as ImportEffectData;
 				IsDirty = true;
 			}
 		}
@@ -113,7 +113,7 @@ namespace VixenModules.Effect.CustomEffect
 		private string CopyLocal(string path)
 		{
 			string name = Path.GetFileName(path);
-			var destPath = Path.Combine(CustomEffectDescriptor.ModulePath, name);
+			var destPath = Path.Combine(ImportEffectDescriptor.ModulePath, name);
 			File.Copy(path, destPath, true);
 			return name;
 		}
@@ -122,7 +122,7 @@ namespace VixenModules.Effect.CustomEffect
 		{
 			if (!string.IsNullOrEmpty(FileName))
 			{
-				var filePath = Path.Combine(CustomEffectDescriptor.ModulePath, FileName);
+				var filePath = Path.Combine(ImportEffectDescriptor.ModulePath, FileName);
 				if (File.Exists(filePath))
 				{
 					var ext = Path.GetExtension(filePath);
@@ -182,7 +182,7 @@ namespace VixenModules.Effect.CustomEffect
 			if (barCount < 1) barCount = 1;
 
 
-			if (Direction < CustomEffectDirection.Left || Direction == CustomEffectDirection.AlternateUp || Direction == CustomEffectDirection.AlternateDown)
+			if (Direction < ImportEffectDirection.Left || Direction == ImportEffectDirection.AlternateUp || Direction == ImportEffectDirection.AlternateDown)
 			{
 				int barHt = BufferHt / barCount+1;
 				if (barHt < 1) barHt = 1;
@@ -190,7 +190,7 @@ namespace VixenModules.Effect.CustomEffect
 				int blockHt = colorcnt * barHt;
 				if (blockHt < 1) blockHt = 1;
 				int fOffset = (int) (position*blockHt*Repeat);// : Speed * frame / 4 % blockHt);
-				if(Direction == CustomEffectDirection.AlternateUp || Direction == CustomEffectDirection.AlternateDown)
+				if(Direction == ImportEffectDirection.AlternateUp || Direction == ImportEffectDirection.AlternateDown)
 				{
 					fOffset = (int)(Math.Floor(position*barCount)*barHt);
 				}
@@ -211,15 +211,15 @@ namespace VixenModules.Effect.CustomEffect
 
 					switch (Direction)
 					{
-						case CustomEffectDirection.Down:
-						case CustomEffectDirection.AlternateDown:
+						case ImportEffectDirection.Down:
+						case ImportEffectDirection.AlternateDown:
 							// down
 							for (x = 0; x < BufferWi; x++)
 							{
 								frameBuffer.SetPixel(x, y, hsv);
 							}
 							break;
-						case CustomEffectDirection.Expand:
+						case ImportEffectDirection.Expand:
 							// expand
 							if (y <= halfHt)
 							{
@@ -230,7 +230,7 @@ namespace VixenModules.Effect.CustomEffect
 								}
 							}
 							break;
-						case CustomEffectDirection.Compress:
+						case ImportEffectDirection.Compress:
 							// compress
 							if (y >= halfHt)
 							{
@@ -259,7 +259,7 @@ namespace VixenModules.Effect.CustomEffect
 				int blockWi = colorcnt * barWi;
 				if (blockWi < 1) blockWi = 1;
 				int fOffset = (int)(position * blockWi * Repeat);
-				if (Direction > CustomEffectDirection.AlternateDown)
+				if (Direction > ImportEffectDirection.AlternateDown)
 				{
 					fOffset = (int)(Math.Floor(position * barCount) * barWi);
 				} 
@@ -277,15 +277,15 @@ namespace VixenModules.Effect.CustomEffect
 					hsv.V = hsv.V * LevelCurve.GetValue(GetEffectTimeIntervalPosition(frame) * 100) / 100;
 					switch (Direction)
 					{
-						case CustomEffectDirection.Right:
-						case CustomEffectDirection.AlternateRight:
+						case ImportEffectDirection.Right:
+						case ImportEffectDirection.AlternateRight:
 							// right
 							for (y = 0; y < BufferHt; y++)
 							{
 								frameBuffer.SetPixel(BufferWi - x - 1, y, hsv);
 							}
 							break;
-						case CustomEffectDirection.HExpand:
+						case ImportEffectDirection.HExpand:
 							// H-expand
 							if (x <= halfWi)
 							{
@@ -296,7 +296,7 @@ namespace VixenModules.Effect.CustomEffect
 								}
 							}
 							break;
-						case CustomEffectDirection.HCompress:
+						case ImportEffectDirection.HCompress:
 							// H-compress
 							if (x >= halfWi)
 							{

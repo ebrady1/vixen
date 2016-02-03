@@ -4,9 +4,9 @@ using Microsoft.Win32;
 
 namespace VixenModules.Editor.EffectEditor.Editors
 {
-	public class  CustomEffectPathEditor : PropertyEditor
+	public class  ImportEffectPathEditor : PropertyEditor
 	{
-		public CustomEffectPathEditor()
+		public ImportEffectPathEditor()
 		{
 			InlineTemplate = EditorKeys.FilePathEditorKey;
 		}
@@ -15,7 +15,7 @@ namespace VixenModules.Editor.EffectEditor.Editors
 		{
 			OpenFileDialog ofd = new OpenFileDialog
 			{
-				Filter = "Effect Files (*.eseq, *vir)|*.eseq;*.vir;",
+				Filter = "Effect Files (*.fseq, *.eseq, *vir)|*.fseq;*.eseq;*.vir;",
 				Multiselect = false
 			};
 

@@ -9,12 +9,12 @@ using VixenModules.App.Curves;
 using VixenModules.Effect.Pixel;
 using ZedGraph;
 
-namespace VixenModules.Effect.CustomEffect
+namespace VixenModules.Effect.ImportEffect
 {
 	[DataContract]
-	public class CustomEffectData: ModuleDataModelBase
+	public class ImportEffectData: ModuleDataModelBase
 	{
-		public CustomEffectData()
+		public ImportEffectData()
 		{
 			FileName = String.Empty;
 			Orientation=StringOrientation.Vertical;
@@ -35,7 +35,7 @@ namespace VixenModules.Effect.CustomEffect
 
 		public override IModuleDataModel Clone()
 		{
-			CustomEffectData result = new CustomEffectData 
+			ImportEffectData result = new ImportEffectData 
 			{
 				FitToTime = FitToTime,
 				Orientation = Orientation,

@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VixenModules.Effect.CustomEffect
+namespace VixenModules.Effect.ImportEffect
 {
 	public abstract class IFileDecode
 	{

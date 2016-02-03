@@ -221,7 +221,7 @@
     <Compile Include="Converters\SystemColorToSolidBrushConverter.cs" />
     <Compile Include="Design\GridEntryContainer.cs" />
     <Compile Include="Design\GridEntryLayout.cs" />
-    <Compile Include="Editors\CustomEffectPathEditor.cs" />
+    <Compile Include="Editors\ImportEffectPathEditor.cs" />
     <Compile Include="Editors\EditorCollection.cs" />
     <Compile Include="Controls\SearchTextBox.cs" />
     <Compile Include="Design\CategoryContainer.cs" />

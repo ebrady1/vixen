@@ -294,7 +294,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fireworks", "Modules\Effect
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutcrackerEffectEditor", "Modules\EffectEditor\NutcrackerEffectEditor\NutcrackerEffectEditor.csproj", "{C259F8FF-5210-4475-BD40-374B1F7F7599}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEffect", "Modules\Effect\CustomEffect\CustomEffect.csproj", "{4D919C14-5E24-4CDE-A1AC-FF3A0349EF93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportEffect", "Modules\Effect\ImportEffect\ImportEffect.csproj", "{4D919C14-5E24-4CDE-A1AC-FF3A0349EF93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
