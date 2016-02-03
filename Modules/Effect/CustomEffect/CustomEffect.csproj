@@ -46,7 +46,9 @@
     <Compile Include="CustomEffectData.cs" />
     <Compile Include="CustomEffectDescriptor.cs" />
     <Compile Include="CustomEffectDirection.cs" />
-    <Compile Include="FPPDecode.cs" />
+    <Compile Include="ESEQDecode.cs" />
+    <Compile Include="FSEQDecode.cs" />
+    <Compile Include="IFileDecode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

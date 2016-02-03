@@ -18,7 +18,7 @@ namespace VixenModules.Effect.CustomEffect
 	public class CustomEffect:PixelEffectBase
 	{
 		private CustomEffectData _data;
-		private FPPDecode _decode = null;
+		private IFileDecode _decode = null;
 		
 		public CustomEffect()
 		{
@@ -125,7 +125,15 @@ namespace VixenModules.Effect.CustomEffect
 				var filePath = Path.Combine(CustomEffectDescriptor.ModulePath, FileName);
 				if (File.Exists(filePath))
 				{
-					_decode = new FPPDecode();
+					var ext = Path.GetExtension(filePath);
+					if (ext.CompareTo(".eseq") == 0)
+					{
+						_decode = new ESEQDecode();
+					}
+					else if (ext.CompareTo(".fseq") == 0)
+					{
+						_decode = new FSEQDecode();
+					}
 					_decode.Load(filePath);
 				}
 				else

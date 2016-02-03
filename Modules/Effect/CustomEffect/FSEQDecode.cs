@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace VixenModules.Effect.CustomEffect
 {
-	class FPPDecode
+	class FSEQDecode : IFileDecode 
 	{
 		private Byte _vMinor = 0;
 		private Byte _vMajor = 1;
-		private UInt32 _periodDataStart = UInt32.MaxValue;
 		private UInt16 _period = 50;
 		private const UInt16 _fixedHeaderLength = 28;
 		private UInt16 _numUniverses = 0;    //Ignored by Pi Player
@@ -19,31 +18,12 @@ namespace VixenModules.Effect.CustomEffect
 		private Byte _gamma = 1;             //0=encoded, 1=linear, 2=RGB
 		private Byte _colorEncoding = 2;
 
-		private FileStream _infs = null;
-
-		private MemoryStream	_dataIn = null;
-		private Byte[] fileData;
-
-		public FPPDecode()
+		public FSEQDecode()
 		{
 
 		}
 
-		public byte[] GetPeriodData(UInt32 period)
-		{
-			_dataIn.Position = _periodDataStart + (SeqNumChannels * period);
-			var buffer = new byte[SeqNumChannels];
-			_dataIn.Read(buffer, 0, SeqNumChannels);
-			return buffer;
-		}
-
-		public Int32 SeqNumChannels
-		{ get; set; }
-
-		public UInt32 SeqNumPeriods
-		{ get; set; }
-
-		public bool Load(String filePath)
+		public override bool Load(String filePath)
 		{
 			bool retVal = false;
 			try
@@ -120,7 +100,6 @@ namespace VixenModules.Effect.CustomEffect
 			}
 			catch (Exception e)
 			{
-				_infs = null;
 				_dataIn = null;
 				throw e;
 			}
