@@ -48,6 +48,7 @@
     <Compile Include="ESEQDecode.cs" />
     <Compile Include="FSEQDecode.cs" />
     <Compile Include="IFileDecode.cs" />
+    <Compile Include="TimingConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

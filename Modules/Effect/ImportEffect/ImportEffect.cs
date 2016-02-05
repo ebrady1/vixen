@@ -35,17 +35,53 @@ namespace VixenModules.Effect.ImportEffect
 		}
 		
 		[Value]
-		[ProviderCategory(@"Config", 2)]
-		[ProviderDisplayName(@"Filename")]
-		[ProviderDescription(@"Filename")]
+		[ProviderCategory(@"Effect Info", 2)]
+		[ProviderDisplayName(@"Effect Filename")]
+		[ProviderDescription(@"Effect Filename")]
 		[PropertyEditor("ImportEffectPathEditor")]
-		[PropertyOrder(1)]
+		[PropertyOrder(0)]
 		public String FileName
 		{
 			get { return _data.FileName; }
 			set
 			{
 				_data.FileName = ConvertPath(value);
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
+		
+		[Value]
+		[ProviderCategory(@"Effect Info", 2)]
+		[ProviderDisplayName(@"Effect Strings")]
+		[ProviderDescription(@"Number of Strings in the Effect")]
+		[NumberRange(0, 10000, 1, 0)]
+		[PropertyOrder(2)]
+		public UInt32 EffectStrings
+		{
+			get { return _data.EffectStrings; }
+
+			set
+			{
+				_data.EffectStrings = value;
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
+
+		[Value]
+		[ProviderCategory(@"Effect Info", 2)]
+		[ProviderDisplayName(@"Effect Pixels Per String")]
+		[ProviderDescription(@"Number of Pixels in each Effect String")]
+		[NumberRange(0, 10000, 1, 0)]
+		[PropertyOrder(2)]
+		public UInt32 EffectPixelsPerStrings
+		{
+			get { return _data.EffectPixelsPerStrings; }
+
+			set
+			{
+				_data.EffectPixelsPerStrings = value;
 				IsDirty = true;
 				OnPropertyChanged();
 			}
@@ -66,11 +102,68 @@ namespace VixenModules.Effect.ImportEffect
 		}
 
 		#endregion
+		
+		#region Level properties
+
+        [Value]
+		[ProviderCategory(@"Config", 3)]
+		[DisplayName(@"Timing")]
+		[Description(@"Timing presenting data in the imported effect.")]
+		[PropertyEditor("SelectionEditor")]
+		[TypeConverter(typeof(TimingConverter))]
+		[PropertyOrder(0)]
+		public Int32 Timing
+		{
+			get { return _data.Timing; }
+			set
+			{
+				_data.Timing = value;
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
+
+		[Value]
+		[ProviderCategory(@"Config", 1)]
+		[ProviderDisplayName(@"Repeat")]
+		[ProviderDescription(@"Repeat")]
+		[PropertyEditor("SliderEditor")]
+		[NumberRange(1,100,1)]
+		[PropertyOrder(1)]
+		public int Repeat
+		{
+			get { return _data.Repeat; }
+			set
+			{
+				_data.Repeat = value;
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
+
+		[Value]
+		[ProviderCategory(@"Config", 3)]
+		[ProviderDisplayName(@"Scale")]
+		[ProviderDescription(@"Scale")]
+		[PropertyOrder(2)]
+		public bool Scale 
+		{
+			get { return _data.Scaled; } 
+			
+			set
+			{
+				_data.Scaled = value;
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
+
+		#endregion
 
 		#region Level properties
 
 		[Value]
-		[ProviderCategory(@"Brightness", 3)]
+		[ProviderCategory(@"Brightness", 4)]
 		[ProviderDisplayName(@"Brightness")]
 		[ProviderDescription(@"Brightness")]
 		public Curve LevelCurve
@@ -158,7 +251,8 @@ namespace VixenModules.Effect.ImportEffect
 			if (null != _decode)
 			{
 				position = (GetEffectTimeIntervalPosition(frame) * 1) % 1;
-				byte[] periodData = _decode.GetPeriodData((UInt32)(position * _decode.SeqNumPeriods));
+				//byte[] periodData = _decode.GetPeriodData((UInt32)((position * _decode.SeqNumPeriods * Repeat) % _decode.SeqNumPeriods));
+				byte[] periodData = _decode.GetPeriodData((UInt32)(frame % _decode.SeqNumPeriods));
 
 				int index = 0;
 				for (int y = 0; y < BufferHt; y++)

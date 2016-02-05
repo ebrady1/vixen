@@ -19,10 +19,19 @@ namespace VixenModules.Effect.ImportEffect
 			FileName = String.Empty;
 			Orientation=StringOrientation.Vertical;
 			LevelCurve = new Curve(new PointPairList(new[] { 0.0, 100.0 }, new[] { 100.0, 100.0 }));
+			Timing = 0;
+			Repeat = 1;
+			Scaled = true;
 		}
 
 		[DataMember]
-		public bool FitToTime { get; set; }
+		public int Repeat{ get; set; }
+	
+		[DataMember]
+		public Int32 Timing { get; set; }
+		
+		[DataMember]
+		public bool Scaled { get; set; }
 
 		[DataMember]
 		public string FileName { get; set; }
@@ -33,14 +42,22 @@ namespace VixenModules.Effect.ImportEffect
 		[DataMember]
 		public Curve LevelCurve { get; set; }
 
+		[DataMember]
+		public UInt32 EffectStrings { get; set; }
+		
+		[DataMember]
+		public UInt32 EffectPixelsPerStrings { get; set; }
+		
 		public override IModuleDataModel Clone()
 		{
 			ImportEffectData result = new ImportEffectData 
 			{
-				FitToTime = FitToTime,
+				Scaled = Scaled,
+				Timing = Timing,
 				Orientation = Orientation,
 				LevelCurve = new Curve(LevelCurve),
-				FileName = FileName
+				FileName = FileName,
+				Repeat = Repeat
 			};
 			return result;
 		}
