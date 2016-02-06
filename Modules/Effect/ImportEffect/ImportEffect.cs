@@ -18,6 +18,10 @@ namespace VixenModules.Effect.ImportEffect
 	public class ImportEffect:PixelEffectBase
 	{
 		private ImportEffectData _data;
+		private const int SPEED_MIN = 0;
+		private const int SPEED_MAX = 20;
+		private const int SPEED_MID = SPEED_MAX / 2;
+
 		private IFileDecode _decode = null;
 		
 		public ImportEffect()
@@ -57,9 +61,12 @@ namespace VixenModules.Effect.ImportEffect
 		[ProviderDescription(@"Number of Strings in the Effect")]
 		[NumberRange(0, 10000, 1, 0)]
 		[PropertyOrder(2)]
-		public UInt32 EffectStrings
+		public Int32 EffectStrings
 		{
-			get { return _data.EffectStrings; }
+			get 
+			{ 
+				return _data.EffectStrings;
+			}
 
 			set
 			{
@@ -74,10 +81,13 @@ namespace VixenModules.Effect.ImportEffect
 		[ProviderDisplayName(@"Effect Pixels Per String")]
 		[ProviderDescription(@"Number of Pixels in each Effect String")]
 		[NumberRange(0, 10000, 1, 0)]
-		[PropertyOrder(2)]
-		public UInt32 EffectPixelsPerStrings
+		[PropertyOrder(3)]
+		public Int32 EffectPixelsPerStrings
 		{
-			get { return _data.EffectPixelsPerStrings; }
+			get
+			{
+				return _data.EffectPixelsPerStrings;
+			}
 
 			set
 			{
@@ -125,17 +135,17 @@ namespace VixenModules.Effect.ImportEffect
 
 		[Value]
 		[ProviderCategory(@"Config", 1)]
-		[ProviderDisplayName(@"Repeat")]
-		[ProviderDescription(@"Repeat")]
+		[ProviderDisplayName(@"Speed/Repeat")]
+		[ProviderDescription(@"Speed or Repeat Count of Effect")]
 		[PropertyEditor("SliderEditor")]
-		[NumberRange(1,100,1)]
+		[NumberRange(SPEED_MIN,SPEED_MAX,1)]
 		[PropertyOrder(1)]
-		public int Repeat
+		public int Speed 
 		{
-			get { return _data.Repeat; }
+			get { return _data.Speed; }
 			set
 			{
-				_data.Repeat = value;
+				_data.Speed = value;
 				IsDirty = true;
 				OnPropertyChanged();
 			}
@@ -245,25 +255,72 @@ namespace VixenModules.Effect.ImportEffect
 			//Nothing to clean up
 		}
 
+		
 		protected override void RenderEffect(int frame, ref PixelFrameBuffer frameBuffer)
 		{
 			double position = 0;
 			if (null != _decode)
 			{
+				UInt32 periodValue = 0;
 				position = (GetEffectTimeIntervalPosition(frame) * 1) % 1;
-				//byte[] periodData = _decode.GetPeriodData((UInt32)((position * _decode.SeqNumPeriods * Repeat) % _decode.SeqNumPeriods));
-				byte[] periodData = _decode.GetPeriodData((UInt32)(frame % _decode.SeqNumPeriods));
+				double speed = 0;
 
-				int index = 0;
-				for (int y = 0; y < BufferHt; y++)
+				if (Speed > 0)
 				{
-					for (int x = 0; x < BufferWi; x++)
+					speed = (Speed > SPEED_MID) ? (Speed - SPEED_MID) : (1.0 / Math.Abs(Speed - SPEED_MID - 1));
+				}
+				switch (Timing)
+				{
+					//Map to Effect Time
+					case 0: 
 					{
-						index = ((y * BufferWi) + x) * 3;
-						Color c = Color.FromArgb(periodData[index], periodData[index + 1], periodData[index + 2]);
+						periodValue = (UInt32)((position * _decode.SeqNumPeriods * speed) % _decode.SeqNumPeriods);
+						break;
+					}
+
+					//Map to Period Count
+					case 1:
+					{
+						periodValue = (UInt32)((frame * speed)% _decode.SeqNumPeriods);
+						break;
+					}
+
+					//Map to Sequence Time
+					case 2:
+					{
+						break;
+					}
+				}
+
+				byte[] periodData = _decode.GetPeriodData(periodValue);
+				double BWIndex = 1;
+				double BHIndex = 1;
+				double index = 0;
+
+				if (Scale)
+				{
+					if (EffectStrings != 0)
+					{
+						BWIndex = (double)BufferWi / (double)EffectStrings; 
+					}
+					
+					if (EffectPixelsPerStrings != 0)
+					{
+						BHIndex = (double)BufferHt / (double)EffectPixelsPerStrings;
+					}
+				}
+
+				for (double y = 0; y < BufferHt; y++ )
+				{
+					for (double x = 0; x < BufferWi; x++)
+					{
+						index = ((Math.Floor(y / BHIndex)) * (Math.Floor((double)BufferHt / BHIndex)) + 
+							Math.Floor(x / BWIndex)) * 3.0;
+						
+						Color c = Color.FromArgb(periodData[(int)index], periodData[(int)index + 1], periodData[(int)index + 2]);
 						var hsv = HSV.FromRGB(c);
 						hsv.V = hsv.V * LevelCurve.GetValue(position * 100) / 100;
-						frameBuffer.SetPixel(x, y, hsv);
+						frameBuffer.SetPixel((int)x, (int)y, hsv);
 					}
 				}
 
