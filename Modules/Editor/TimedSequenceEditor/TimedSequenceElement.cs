@@ -48,6 +48,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 				if (this.EffectNode != null)
 				{
 					this.EffectNode.StartTime = this.StartTime;
+					this.EffectNode.Effect.StartTime = this.StartTime;
 					this.EffectNode.Effect.TimeSpan = this.Duration;
 				}
 

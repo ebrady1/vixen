@@ -15,7 +15,7 @@ namespace VixenModules.Editor.EffectEditor.Editors
 		{
 			OpenFileDialog ofd = new OpenFileDialog
 			{
-				Filter = "Effect Files (*.fseq, *.eseq, *vir)|*.fseq;*.eseq;*.vir;",
+				Filter = "All Files (*.*) | *.*;",
 				Multiselect = false
 			};
 

@@ -38,12 +38,30 @@ namespace VixenModules.Effect.ImportEffect
 			protected set { base.IsDirty = value; }
 		}
 		
+        [Value]
+		[ProviderCategory(@"Effect Info", 2)]
+		[DisplayName(@"Effect Type")]
+		[Description(@"Effect Type")]
+		[PropertyEditor("SelectionEditor")]
+		[TypeConverter(typeof(EffectTypeConverter))]
+		[PropertyOrder(0)]
+		public Int32 EffectType 
+		{
+			get { return _data.EffectType; }
+			set
+			{
+				_data.EffectType = value;
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
+		
 		[Value]
 		[ProviderCategory(@"Effect Info", 2)]
 		[ProviderDisplayName(@"Effect Filename")]
 		[ProviderDescription(@"Effect Filename")]
 		[PropertyEditor("ImportEffectPathEditor")]
-		[PropertyOrder(0)]
+		[PropertyOrder(1)]
 		public String FileName
 		{
 			get { return _data.FileName; }
@@ -61,7 +79,7 @@ namespace VixenModules.Effect.ImportEffect
 		[ProviderDescription(@"Number of Strings in the Effect")]
 		[NumberRange(0, 10000, 1, 0)]
 		[PropertyOrder(2)]
-		public Int32 EffectStrings
+		public UInt32 EffectStrings
 		{
 			get 
 			{ 
@@ -82,7 +100,7 @@ namespace VixenModules.Effect.ImportEffect
 		[ProviderDescription(@"Number of Pixels in each Effect String")]
 		[NumberRange(0, 10000, 1, 0)]
 		[PropertyOrder(3)]
-		public Int32 EffectPixelsPerStrings
+		public UInt32 EffectPixelsPerStrings
 		{
 			get
 			{
@@ -167,7 +185,40 @@ namespace VixenModules.Effect.ImportEffect
 				OnPropertyChanged();
 			}
 		}
+		
+		[Value]
+		[ProviderCategory(@"Config", 3)]
+		[ProviderDisplayName(@"Flip Horizontal")]
+		[ProviderDescription(@"Flip Horizontal")]
+		[PropertyOrder(3)]
+		public bool FlipHorizontal 
+		{
+			get { return _data.FlipHorizontal; } 
+			
+			set
+			{
+				_data.FlipHorizontal = value;
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
 
+		[Value]
+		[ProviderCategory(@"Config", 3)]
+		[ProviderDisplayName(@"Flip Vertical")]
+		[ProviderDescription(@"Flip Vertical")]
+		[PropertyOrder(4)]
+		public bool FlipVertical 
+		{
+			get { return _data.FlipVertical; } 
+			
+			set
+			{
+				_data.FlipVertical = value;
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
 		#endregion
 
 		#region Level properties
@@ -223,28 +274,57 @@ namespace VixenModules.Effect.ImportEffect
 
 		protected override void SetupRender()
 		{
+			bool result = false;
+			EffectStrings = (EffectStrings == 0) ? (UInt32)StringCount : EffectStrings;
+			EffectPixelsPerStrings = (EffectPixelsPerStrings == 0) ? (UInt32)MaxPixelsPerString : EffectPixelsPerStrings;
+
 			if (!string.IsNullOrEmpty(FileName))
 			{
 				var filePath = Path.Combine(ImportEffectDescriptor.ModulePath, FileName);
 				if (File.Exists(filePath))
 				{
-					var ext = Path.GetExtension(filePath);
-					if (ext.CompareTo(".eseq") == 0)
+					switch (EffectType)
 					{
-						_decode = new ESEQDecode();
+						//FPP FSeq File Format
+						case 0:
+						{
+							_decode = new FSEQDecode();
+							break;
+						}
+					
+						//FPP ESeq File Format
+						case 1:
+						{
+							_decode = new ESEQDecode();
+							break;
+						}
+					
+						//Glediator File Format
+						case 2:
+						{
+							_decode = new GlediatorDecode(EffectStrings, EffectPixelsPerStrings);
+							break;
+						}
+						
+						//xLights File Format
+						case 3:
+						{
+							_decode = new xLightsDecode();
+							break;
+						}
+
+						default:
+						{
+							break;
+						}
 					}
-					else if (ext.CompareTo(".fseq") == 0)
+					if (null != _decode)
 					{
-						_decode = new FSEQDecode();
+						result = _decode.Load(filePath);
 					}
-					_decode.Load(filePath);
-				}
-				else
-				{
-					_decode = null;
 				}
 			}
-			else
+			if (!result)
 			{
 				_decode = null;
 			}
@@ -259,8 +339,10 @@ namespace VixenModules.Effect.ImportEffect
 		protected override void RenderEffect(int frame, ref PixelFrameBuffer frameBuffer)
 		{
 			double position = 0;
+
 			if (null != _decode)
 			{
+			
 				UInt32 periodValue = 0;
 				position = (GetEffectTimeIntervalPosition(frame) * 1) % 1;
 				double speed = 0;
@@ -288,11 +370,18 @@ namespace VixenModules.Effect.ImportEffect
 					//Map to Sequence Time
 					case 2:
 					{
+						UInt32 tmpPeriod = (UInt32)(StartTime.TotalMilliseconds / (double)FrameTime) + (UInt32)frame;
+						periodValue = (tmpPeriod < _decode.SeqNumPeriods) ? tmpPeriod : UInt32.MaxValue;
 						break;
 					}
 				}
 
 				byte[] periodData = _decode.GetPeriodData(periodValue);
+				if (periodData == null)
+				{
+				//	return;
+				}
+
 				double BWIndex = 1;
 				double BHIndex = 1;
 				double index = 0;
@@ -310,12 +399,30 @@ namespace VixenModules.Effect.ImportEffect
 					}
 				}
 
-				for (double y = 0; y < BufferHt; y++ )
+				double indexXStart = 0;
+				double indexYStart = 0;
+				double indexXInc = 1;
+				double indexYInc = 1;
+
+				if (FlipVertical)
 				{
-					for (double x = 0; x < BufferWi; x++)
+					indexYStart = BufferHt - 1;
+					indexYInc = -1;
+				}
+
+				if (FlipHorizontal)
+				{
+					indexXStart = BufferWi - 1;
+					indexXInc = -1;
+				}
+
+
+				for (double indexY = indexYStart, y = 0; y < BufferHt; y++, indexY += indexYInc )
+				{
+					for (double indexX = indexXStart, x = 0; x < BufferWi; x++, indexX += indexXInc )
 					{
-						index = ((Math.Floor(y / BHIndex)) * (Math.Floor((double)BufferHt / BHIndex)) + 
-							Math.Floor(x / BWIndex)) * 3.0;
+						index = ((Math.Floor(indexY / BHIndex)) * (Math.Floor((double)BufferHt / BHIndex)) + 
+							Math.Floor(indexX / BWIndex)) * 3.0;
 						
 						Color c = Color.FromArgb(periodData[(int)index], periodData[(int)index + 1], periodData[(int)index + 2]);
 						var hsv = HSV.FromRGB(c);
@@ -325,150 +432,6 @@ namespace VixenModules.Effect.ImportEffect
 				}
 
 			}
-		/*
-			int x, y, n, colorIdx;
-			int colorcnt = Colors.Count();
-			int barCount = Repeat * colorcnt;
-			double position = (GetEffectTimeIntervalPosition(frame) * Speed) % 1;
-			if (barCount < 1) barCount = 1;
-
-
-			if (Direction < ImportEffectDirection.Left || Direction == ImportEffectDirection.AlternateUp || Direction == ImportEffectDirection.AlternateDown)
-			{
-				int barHt = BufferHt / barCount+1;
-				if (barHt < 1) barHt = 1;
-				int halfHt = BufferHt / 2;
-				int blockHt = colorcnt * barHt;
-				if (blockHt < 1) blockHt = 1;
-				int fOffset = (int) (position*blockHt*Repeat);// : Speed * frame / 4 % blockHt);
-				if(Direction == ImportEffectDirection.AlternateUp || Direction == ImportEffectDirection.AlternateDown)
-				{
-					fOffset = (int)(Math.Floor(position*barCount)*barHt);
-				}
-				int indexAdjust = 1;
-				
-				for (y = 0; y < BufferHt; y++)
-				{
-					n = y + fOffset;
-					colorIdx = ((n + indexAdjust) % blockHt) / barHt;
-					//we need the integer division here to make things work
-					double colorPosition = ((double)(n + indexAdjust) / barHt) - ((n + indexAdjust) / barHt);
-					Color c = Colors[colorIdx].GetColorAt(colorPosition);
-					var hsv = HSV.FromRGB(c);
-					if (Highlight && (n + indexAdjust) % barHt == 0) hsv.S = 0.0f;
-					if (Show3D) hsv.V *= (float)(barHt - (n + indexAdjust) % barHt - 1) / barHt;
-
-					hsv.V = hsv.V * LevelCurve.GetValue(GetEffectTimeIntervalPosition(frame) * 100) / 100;
-
-					switch (Direction)
-					{
-						case ImportEffectDirection.Down:
-						case ImportEffectDirection.AlternateDown:
-							// down
-							for (x = 0; x < BufferWi; x++)
-							{
-								frameBuffer.SetPixel(x, y, hsv);
-							}
-							break;
-						case ImportEffectDirection.Expand:
-							// expand
-							if (y <= halfHt)
-							{
-								for (x = 0; x < BufferWi; x++)
-								{
-									frameBuffer.SetPixel(x, y, hsv);
-									frameBuffer.SetPixel(x, BufferHt - y - 1, hsv);
-								}
-							}
-							break;
-						case ImportEffectDirection.Compress:
-							// compress
-							if (y >= halfHt)
-							{
-								for (x = 0; x < BufferWi; x++)
-								{
-									frameBuffer.SetPixel(x, y, hsv);
-									frameBuffer.SetPixel(x, BufferHt - y - 1, hsv);
-								}
-							}
-							break;
-						default:
-							// up & AlternateUp
-							for (x = 0; x < BufferWi; x++)
-							{
-								frameBuffer.SetPixel(x, BufferHt - y - 1, hsv);
-							}
-							break;
-					}
-				}
-			}
-			else
-			{
-				int barWi = BufferWi / barCount+1;
-				if (barWi < 1) barWi = 1;
-				int halfWi = BufferWi / 2;
-				int blockWi = colorcnt * barWi;
-				if (blockWi < 1) blockWi = 1;
-				int fOffset = (int)(position * blockWi * Repeat);
-				if (Direction > ImportEffectDirection.AlternateDown)
-				{
-					fOffset = (int)(Math.Floor(position * barCount) * barWi);
-				} 
-				
-				for (x = 0; x < BufferWi; x++)
-				{
-					n = x + fOffset;
-					colorIdx = ((n + 1) % blockWi) / barWi;
-					//we need the integer division here to make things work
-					double colorPosition = ((double)(n + 1) / barWi) - ((n + 1) / barWi);
-					Color c = Colors[colorIdx].GetColorAt( colorPosition );
-					var hsv = HSV.FromRGB(c);
-					if (Highlight && n % barWi == 0) hsv.S = 0.0f;
-					if (Show3D) hsv.V *= (float)(barWi - n % barWi - 1) / barWi;
-					hsv.V = hsv.V * LevelCurve.GetValue(GetEffectTimeIntervalPosition(frame) * 100) / 100;
-					switch (Direction)
-					{
-						case ImportEffectDirection.Right:
-						case ImportEffectDirection.AlternateRight:
-							// right
-							for (y = 0; y < BufferHt; y++)
-							{
-								frameBuffer.SetPixel(BufferWi - x - 1, y, hsv);
-							}
-							break;
-						case ImportEffectDirection.HExpand:
-							// H-expand
-							if (x <= halfWi)
-							{
-								for (y = 0; y < BufferHt; y++)
-								{
-									frameBuffer.SetPixel(x, y, hsv);
-									frameBuffer.SetPixel(BufferWi - x - 1, y, hsv);
-								}
-							}
-							break;
-						case ImportEffectDirection.HCompress:
-							// H-compress
-							if (x >= halfWi)
-							{
-								for (y = 0; y < BufferHt; y++)
-								{
-									frameBuffer.SetPixel(x, y, hsv);
-									frameBuffer.SetPixel(BufferWi - x - 1, y, hsv);
-								}
-							}
-							break;
-						default:
-							// left & AlternateLeft
-							for (y = 0; y < BufferHt; y++)
-							{
-								frameBuffer.SetPixel(x, y, hsv);
-							}
-							break;
-					}
-				}
-			}
-		*/
 		}
 	}
 }

@@ -12,15 +12,26 @@ namespace VixenModules.Effect.ImportEffect
 		protected MemoryStream	_dataIn = null;
 		protected UInt32 _periodDataStart = UInt32.MaxValue;
 
-		public byte[] GetPeriodData(UInt32 period)
+		public IFileDecode()
 		{
+			SeqNumChannels = Int32.MaxValue;
+			SeqNumPeriods = UInt32.MaxValue;
+		}
+
+		virtual public byte[] GetPeriodData(UInt32 period)
+		{
+			if (period == UInt32.MaxValue)
+			{
+				return null;
+			}
+			
 			_dataIn.Position = _periodDataStart + (SeqNumChannels * period);
 			var buffer = new byte[SeqNumChannels];
-			_dataIn.Read(buffer, 0, SeqNumChannels);
+			_dataIn.Read(buffer, 0, (Int32)SeqNumChannels);
 			return buffer;
 		}
 
-		public Int32 SeqNumChannels
+		public UInt32 SeqNumChannels
 		{ get; set; }
 
 		public UInt32 SeqNumPeriods

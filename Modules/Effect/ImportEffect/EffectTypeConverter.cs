@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace VixenModules.Effect.ImportEffect
 {
-	public class TimingConverter : TypeConverter
+	public class EffectTypeConverter : TypeConverter
 	{
 		private String[]  m_selections;
 
-		public TimingConverter()
+		public EffectTypeConverter()
 		{
-			m_selections = new String[] { "Effect Time", "Period Count", "Map to Sequence Time" };
+			m_selections = new String[] { "FPP Sequence", "FPP Effect Sequence",  "Glediator Recording",  "xLights Effect" };
 		}
 
 		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)

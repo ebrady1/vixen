@@ -23,6 +23,7 @@ namespace Vixen.Module.Effect
 	{
 		private ElementNode[] _targetNodes;
 		private TimeSpan _timeSpan;
+		private TimeSpan _startTime;
 		private DefaultValueArrayMember _parameterValues;
 		protected ElementIntents _elementIntents;
 		private static Logger Logging = LogManager.GetCurrentClassLogger();
@@ -64,6 +65,20 @@ namespace Vixen.Module.Effect
 		[Browsable(false)]
 		public IEnumerable<Guid> EffectedElementIds { get; set; }
 
+		[Browsable(false)]
+		public TimeSpan StartTime 
+		{
+			get { return _startTime; }
+			set
+			{
+				if (value != _startTime)
+				{
+					_startTime = value;
+					IsDirty = true;
+				}
+			}
+		}
+		
 		[Browsable(false)]
 		public TimeSpan TimeSpan
 		{

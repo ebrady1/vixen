@@ -24,6 +24,9 @@ namespace VixenModules.Effect.ImportEffect
 			Scaled = true;
 			EffectStrings = 0;
 			EffectPixelsPerStrings = 0;
+			FlipHorizontal = false;
+			FlipVertical = false;
+			EffectType = 0;
 		}
 
 		[DataMember]
@@ -34,7 +37,16 @@ namespace VixenModules.Effect.ImportEffect
 		
 		[DataMember]
 		public bool Scaled { get; set; }
+		
+		[DataMember]
+		public bool FlipHorizontal { get; set; }
+	
+		[DataMember]
+		public bool FlipVertical { get; set; }
 
+		[DataMember]
+		public int EffectType{ get; set; }
+		
 		[DataMember]
 		public string FileName { get; set; }
 
@@ -45,10 +57,10 @@ namespace VixenModules.Effect.ImportEffect
 		public Curve LevelCurve { get; set; }
 
 		[DataMember]
-		public Int32 EffectStrings { get; set; }
+		public UInt32 EffectStrings { get; set; }
 		
 		[DataMember]
-		public Int32 EffectPixelsPerStrings { get; set; }
+		public UInt32 EffectPixelsPerStrings { get; set; }
 		
 		public override IModuleDataModel Clone()
 		{
@@ -61,7 +73,10 @@ namespace VixenModules.Effect.ImportEffect
 				FileName = FileName,
 				Speed = Speed,
 				EffectPixelsPerStrings = EffectPixelsPerStrings,
-				EffectStrings = EffectStrings
+				EffectStrings = EffectStrings,
+				FlipVertical = FlipVertical,
+				FlipHorizontal = FlipHorizontal,
+				EffectType = EffectType
 			};
 			return result;
 		}

@@ -24,6 +24,11 @@ namespace Vixen.Module.Effect
 		IEnumerable<Guid> EffectedElementIds { get; set; }
 
 		/// <summary>
+		/// The start time of the effect.
+		/// </summary>
+		TimeSpan StartTime{ get; set; }
+
+		/// <summary>
 		/// The length of the entire effect.
 		/// </summary>
 		TimeSpan TimeSpan { get; set; }

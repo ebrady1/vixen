@@ -42,6 +42,8 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="xLightsDecode.cs" />
+    <Compile Include="GeldiatorDecde.cs" />
     <Compile Include="ImportEffect.cs" />
     <Compile Include="ImportEffectData.cs" />
     <Compile Include="ImportEffectDescriptor.cs" />
@@ -49,6 +51,7 @@
     <Compile Include="FSEQDecode.cs" />
     <Compile Include="IFileDecode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EffectTypeConverter.cs" />
     <Compile Include="TimingConverter.cs" />
   </ItemGroup>
   <ItemGroup>

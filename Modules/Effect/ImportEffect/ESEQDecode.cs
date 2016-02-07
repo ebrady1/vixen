@@ -20,7 +20,7 @@ namespace VixenModules.Effect.ImportEffect
 		{
 			_dataIn.Position = _periodDataStart + (SeqNumChannels * period);
 			var buffer = new byte[SeqNumChannels];
-			_dataIn.Read(buffer, 0, SeqNumChannels);
+			_dataIn.Read(buffer, 0, (Int32)SeqNumChannels);
 			return buffer;
 		}
 
@@ -49,19 +49,20 @@ namespace VixenModules.Effect.ImportEffect
 
 					// Step Size
 					 SeqNumChannels =
-						(int)(header[8] +
+						(UInt32)(header[8] +
 						((header[9] << 8) & 0xFF00) +
 						((header[10] << 16) & 0xFF0000) +
 						((header[11] << 24) & 0xFF000000));
 
 					// Size of the Model
 					ModelSize =
-						(uint)(header[16] +
+						(UInt32)(header[16] +
 						((header[17] << 8) & 0xFF00) +
 						((header[18] << 16) & 0xFF0000) +
 						((header[19] << 24) & 0xFF000000));
 
 					SeqNumPeriods = (UInt32)(_dataIn.Length - _fixedHeaderLength) / ModelSize;
+					retVal = true;
 
 				}
 				else

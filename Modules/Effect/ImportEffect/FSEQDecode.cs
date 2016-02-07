@@ -57,14 +57,14 @@ namespace VixenModules.Effect.ImportEffect
 
 					// Step Size
 					 SeqNumChannels =
-						(int)(header[10] +
+						(UInt32)(header[10] +
 						((header[11] << 8) & 0xFF00) +
 						((header[12] << 16) & 0xFF0000) +
 						((header[13] << 24) & 0xFF000000));
 
 					// Number of Steps
 					SeqNumPeriods =
-						(uint)(header[14] +
+						(UInt32)(header[14] +
 						((header[15] << 8) & 0xFF00) +
 						((header[16] << 16) & 0xFF0000) +
 						((header[17] << 24) & 0xFF000000));
