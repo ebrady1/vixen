@@ -153,17 +153,17 @@ namespace VixenModules.Effect.ImportEffect
 
 		[Value]
 		[ProviderCategory(@"Config", 1)]
-		[ProviderDisplayName(@"Speed/Repeat")]
-		[ProviderDescription(@"Speed or Repeat Count of Effect")]
+		[ProviderDisplayName(@"Period Offset")]
+		[ProviderDescription(@"# of periods to offset the Effect")]
 		[PropertyEditor("SliderEditor")]
-		[NumberRange(SPEED_MIN,SPEED_MAX,1)]
+		[NumberRange(0,100,1)]
 		[PropertyOrder(1)]
-		public int Speed 
+		public Int32 PeriodOffset 
 		{
-			get { return _data.Speed; }
+			get { return _data.PeriodOffset; }
 			set
 			{
-				_data.Speed = value;
+				_data.PeriodOffset= value;
 				IsDirty = true;
 				OnPropertyChanged();
 			}
@@ -215,6 +215,23 @@ namespace VixenModules.Effect.ImportEffect
 			set
 			{
 				_data.FlipVertical = value;
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
+		
+		[Value]
+		[ProviderCategory(@"Config", 3)]
+		[ProviderDisplayName(@"Reverse")]
+		[ProviderDescription(@"Play the effect in Reverse")]
+		[PropertyOrder(5)]
+		public bool Reverse 
+		{
+			get { return _data.Reverse; } 
+			
+			set
+			{
+				_data.Reverse = value;
 				IsDirty = true;
 				OnPropertyChanged();
 			}
@@ -342,28 +359,25 @@ namespace VixenModules.Effect.ImportEffect
 
 			if (null != _decode)
 			{
-			
 				UInt32 periodValue = 0;
-				position = (GetEffectTimeIntervalPosition(frame) * 1) % 1;
-				double speed = 0;
 
-				if (Speed > 0)
-				{
-					speed = (Speed > SPEED_MID) ? (Speed - SPEED_MID) : (1.0 / Math.Abs(Speed - SPEED_MID - 1));
-				}
+				position = (GetEffectTimeIntervalPosition(frame) * 1) % 1;
+
 				switch (Timing)
 				{
 					//Map to Effect Time
 					case 0: 
 					{
-						periodValue = (UInt32)((position * _decode.SeqNumPeriods * speed) % _decode.SeqNumPeriods);
+						periodValue = (UInt32)(((position * _decode.SeqNumPeriods) + PeriodOffset) % _decode.SeqNumPeriods);
 						break;
 					}
 
 					//Map to Period Count
 					case 1:
 					{
-						periodValue = (UInt32)((frame * speed)% _decode.SeqNumPeriods);
+						//periodValue = (UInt32)(frame % _decode.SeqNumPeriods);
+						periodValue = (UInt32) (PeriodOffset + frame);
+
 						break;
 					}
 
@@ -375,6 +389,9 @@ namespace VixenModules.Effect.ImportEffect
 						break;
 					}
 				}
+
+				periodValue = (_data.Reverse) ? _decode.SeqNumPeriods - periodValue - 1: periodValue;
+				//periodValue = (UInt32)(periodValue + PeriodOffset) % _decode.SeqNumPeriods;
 
 				byte[] periodData = _decode.GetPeriodData(periodValue);
 				if (periodData == null)

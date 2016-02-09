@@ -84,8 +84,8 @@ namespace VixenModules.Effect.ImportEffect
 					// Color Encoding
 					_colorEncoding = header[25];
 
-					//Pad
-					//At present, header[26] and header[27] are always assumed to be 0
+					retVal = true;
+
 				}
 				else
 				{

@@ -27,13 +27,20 @@ namespace VixenModules.Effect.ImportEffect
 			FlipHorizontal = false;
 			FlipVertical = false;
 			EffectType = 0;
+			PeriodOffset = 0;
 		}
 
+		[DataMember]
+		public Int32 PeriodOffset{ get; set; }
+		
 		[DataMember]
 		public int Speed { get; set; }
 	
 		[DataMember]
 		public Int32 Timing { get; set; }
+		
+		[DataMember]
+		public bool Reverse { get; set; }
 		
 		[DataMember]
 		public bool Scaled { get; set; }
@@ -76,7 +83,8 @@ namespace VixenModules.Effect.ImportEffect
 				EffectStrings = EffectStrings,
 				FlipVertical = FlipVertical,
 				FlipHorizontal = FlipHorizontal,
-				EffectType = EffectType
+				EffectType = EffectType,
+				PeriodOffset = PeriodOffset
 			};
 			return result;
 		}

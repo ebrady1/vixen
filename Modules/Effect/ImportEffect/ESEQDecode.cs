@@ -16,14 +16,6 @@ namespace VixenModules.Effect.ImportEffect
 
 		}
 
-		public byte[] GetPeriodData(UInt32 period)
-		{
-			_dataIn.Position = _periodDataStart + (SeqNumChannels * period);
-			var buffer = new byte[SeqNumChannels];
-			_dataIn.Read(buffer, 0, (Int32)SeqNumChannels);
-			return buffer;
-		}
-
 		public UInt32 ModelSize
 		{ get; set; }
 		

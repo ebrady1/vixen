@@ -20,14 +20,15 @@ namespace VixenModules.Effect.ImportEffect
 
 		virtual public byte[] GetPeriodData(UInt32 period)
 		{
-			if (period == UInt32.MaxValue)
-			{
-				return null;
-			}
-			
-			_dataIn.Position = _periodDataStart + (SeqNumChannels * period);
 			var buffer = new byte[SeqNumChannels];
-			_dataIn.Read(buffer, 0, (Int32)SeqNumChannels);
+			Array.Clear(buffer, 0, (int)SeqNumChannels);
+
+			try
+			{
+				_dataIn.Position = _periodDataStart + (SeqNumChannels * period);
+				_dataIn.Read(buffer, 0, (Int32)SeqNumChannels);
+			}
+			catch (Exception e) { } 
 			return buffer;
 		}
 
