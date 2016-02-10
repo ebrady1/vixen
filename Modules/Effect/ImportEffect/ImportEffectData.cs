@@ -28,8 +28,12 @@ namespace VixenModules.Effect.ImportEffect
 			FlipVertical = false;
 			EffectType = 0;
 			PeriodOffset = 0;
+			Repeat = 1;
 		}
 
+		[DataMember]
+		public Int32 Repeat{ get; set; }
+		
 		[DataMember]
 		public Int32 PeriodOffset{ get; set; }
 		
@@ -84,7 +88,8 @@ namespace VixenModules.Effect.ImportEffect
 				FlipVertical = FlipVertical,
 				FlipHorizontal = FlipHorizontal,
 				EffectType = EffectType,
-				PeriodOffset = PeriodOffset
+				PeriodOffset = PeriodOffset,
+				Repeat = Repeat
 			};
 			return result;
 		}

@@ -18,10 +18,6 @@ namespace VixenModules.Effect.ImportEffect
 	public class ImportEffect:PixelEffectBase
 	{
 		private ImportEffectData _data;
-		private const int SPEED_MIN = 0;
-		private const int SPEED_MAX = 20;
-		private const int SPEED_MID = SPEED_MAX / 2;
-
 		private IFileDecode _decode = null;
 		
 		public ImportEffect()
@@ -170,10 +166,28 @@ namespace VixenModules.Effect.ImportEffect
 		}
 
 		[Value]
+		[ProviderCategory(@"Config", 1)]
+		[ProviderDisplayName(@"Repeat")]
+		[ProviderDescription(@"Repeat (Applicable to Effect Time setting only")]
+		[PropertyEditor("SliderEditor")]
+		[NumberRange(0,10,1)]
+		[PropertyOrder(2)]
+		public Int32 Repeat 
+		{
+			get { return _data.Repeat; }
+			set
+			{
+				_data.Repeat = value;
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
+		
+		[Value]
 		[ProviderCategory(@"Config", 3)]
 		[ProviderDisplayName(@"Scale")]
 		[ProviderDescription(@"Scale")]
-		[PropertyOrder(2)]
+		[PropertyOrder(3)]
 		public bool Scale 
 		{
 			get { return _data.Scaled; } 
@@ -190,7 +204,7 @@ namespace VixenModules.Effect.ImportEffect
 		[ProviderCategory(@"Config", 3)]
 		[ProviderDisplayName(@"Flip Horizontal")]
 		[ProviderDescription(@"Flip Horizontal")]
-		[PropertyOrder(3)]
+		[PropertyOrder(4)]
 		public bool FlipHorizontal 
 		{
 			get { return _data.FlipHorizontal; } 
@@ -207,7 +221,7 @@ namespace VixenModules.Effect.ImportEffect
 		[ProviderCategory(@"Config", 3)]
 		[ProviderDisplayName(@"Flip Vertical")]
 		[ProviderDescription(@"Flip Vertical")]
-		[PropertyOrder(4)]
+		[PropertyOrder(5)]
 		public bool FlipVertical 
 		{
 			get { return _data.FlipVertical; } 
@@ -224,7 +238,7 @@ namespace VixenModules.Effect.ImportEffect
 		[ProviderCategory(@"Config", 3)]
 		[ProviderDisplayName(@"Reverse")]
 		[ProviderDescription(@"Play the effect in Reverse")]
-		[PropertyOrder(5)]
+		[PropertyOrder(6)]
 		public bool Reverse 
 		{
 			get { return _data.Reverse; } 
@@ -356,13 +370,15 @@ namespace VixenModules.Effect.ImportEffect
 		protected override void RenderEffect(int frame, ref PixelFrameBuffer frameBuffer)
 		{
 			double position = 0;
+			double iposition = 0;
 
 			if (null != _decode)
 			{
 				UInt32 periodValue = 0;
 
-				position = (GetEffectTimeIntervalPosition(frame) * 1) % 1;
-
+				position = (GetEffectTimeIntervalPosition(frame) * Repeat) % 1;
+				iposition = (GetEffectTimeIntervalPosition(frame)) % 1;
+				
 				switch (Timing)
 				{
 					//Map to Effect Time
@@ -375,7 +391,6 @@ namespace VixenModules.Effect.ImportEffect
 					//Map to Period Count
 					case 1:
 					{
-						//periodValue = (UInt32)(frame % _decode.SeqNumPeriods);
 						periodValue = (UInt32) (PeriodOffset + frame);
 
 						break;
@@ -391,7 +406,6 @@ namespace VixenModules.Effect.ImportEffect
 				}
 
 				periodValue = (_data.Reverse) ? _decode.SeqNumPeriods - periodValue - 1: periodValue;
-				//periodValue = (UInt32)(periodValue + PeriodOffset) % _decode.SeqNumPeriods;
 
 				byte[] periodData = _decode.GetPeriodData(periodValue);
 				if (periodData == null)
@@ -443,7 +457,7 @@ namespace VixenModules.Effect.ImportEffect
 						
 						Color c = Color.FromArgb(periodData[(int)index], periodData[(int)index + 1], periodData[(int)index + 2]);
 						var hsv = HSV.FromRGB(c);
-						hsv.V = hsv.V * LevelCurve.GetValue(position * 100) / 100;
+						hsv.V = hsv.V * LevelCurve.GetValue(iposition * 100) / 100;
 						frameBuffer.SetPixel((int)x, (int)y, hsv);
 					}
 				}
