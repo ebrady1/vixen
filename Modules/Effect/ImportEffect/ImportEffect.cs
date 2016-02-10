@@ -234,22 +234,6 @@ namespace VixenModules.Effect.ImportEffect
 			}
 		}
 		
-		[Value]
-		[ProviderCategory(@"Config", 3)]
-		[ProviderDisplayName(@"Reverse")]
-		[ProviderDescription(@"Play the effect in Reverse")]
-		[PropertyOrder(6)]
-		public bool Reverse 
-		{
-			get { return _data.Reverse; } 
-			
-			set
-			{
-				_data.Reverse = value;
-				IsDirty = true;
-				OnPropertyChanged();
-			}
-		}
 		#endregion
 
 		#region Position
@@ -423,7 +407,7 @@ namespace VixenModules.Effect.ImportEffect
 					}
 				}
 
-				periodValue = (_data.Reverse) ? _decode.SeqNumPeriods - periodValue - 1: periodValue;
+				//periodValue = (_data.Reverse) ? _decode.SeqNumPeriods - periodValue - 1: periodValue;
 
 				byte[] periodData = _decode.GetPeriodData(periodValue);
 				if (periodData == null)

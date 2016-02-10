@@ -45,9 +45,6 @@ namespace VixenModules.Effect.ImportEffect
 		public Int32 Timing { get; set; }
 		
 		[DataMember]
-		public bool Reverse { get; set; }
-		
-		[DataMember]
 		public bool Scaled { get; set; }
 		
 		[DataMember]
