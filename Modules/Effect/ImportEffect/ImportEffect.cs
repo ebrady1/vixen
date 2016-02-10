@@ -252,10 +252,27 @@ namespace VixenModules.Effect.ImportEffect
 		}
 		#endregion
 
+		#region Position
+		[Value]
+		[ProviderCategory(@"Movement",4)]
+		[ProviderDisplayName(@"Movement")]
+		[ProviderDescription(@"Movement Profile of Effect")]
+		public Curve MovementCurve 
+		{
+			get { return _data.MovementCurve; }
+			set
+			{
+				_data.MovementCurve = value;
+				IsDirty = true;
+				OnPropertyChanged();
+			}
+		}
+		#endregion
+
 		#region Level properties
 
 		[Value]
-		[ProviderCategory(@"Brightness", 4)]
+		[ProviderCategory(@"Brightness", 5)]
 		[ProviderDisplayName(@"Brightness")]
 		[ProviderDescription(@"Brightness")]
 		public Curve LevelCurve
@@ -371,12 +388,13 @@ namespace VixenModules.Effect.ImportEffect
 		{
 			double position = 0;
 			double iposition = 0;
+			double framePos = 0;
 
 			if (null != _decode)
 			{
 				UInt32 periodValue = 0;
 
-				position = (GetEffectTimeIntervalPosition(frame) * Repeat) % 1;
+				framePos = (GetEffectTimeIntervalPosition(frame) * Repeat) % 1;
 				iposition = (GetEffectTimeIntervalPosition(frame)) % 1;
 				
 				switch (Timing)
@@ -384,6 +402,7 @@ namespace VixenModules.Effect.ImportEffect
 					//Map to Effect Time
 					case 0: 
 					{
+						position = 	MovementCurve.GetValue(framePos * 100) / 100;
 						periodValue = (UInt32)(((position * _decode.SeqNumPeriods) + PeriodOffset) % _decode.SeqNumPeriods);
 						break;
 					}
@@ -392,7 +411,6 @@ namespace VixenModules.Effect.ImportEffect
 					case 1:
 					{
 						periodValue = (UInt32) (PeriodOffset + frame);
-
 						break;
 					}
 

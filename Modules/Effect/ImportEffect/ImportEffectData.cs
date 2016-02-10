@@ -29,6 +29,7 @@ namespace VixenModules.Effect.ImportEffect
 			EffectType = 0;
 			PeriodOffset = 0;
 			Repeat = 1;
+			MovementCurve = new Curve(new PointPairList(new[] { 0.0, 0.0 }, new[] { 100.0, 100.0 }));
 		}
 
 		[DataMember]
@@ -73,6 +74,9 @@ namespace VixenModules.Effect.ImportEffect
 		[DataMember]
 		public UInt32 EffectPixelsPerStrings { get; set; }
 		
+		[DataMember]
+		public Curve MovementCurve { get; set; }
+		
 		public override IModuleDataModel Clone()
 		{
 			ImportEffectData result = new ImportEffectData 
@@ -89,7 +93,8 @@ namespace VixenModules.Effect.ImportEffect
 				FlipHorizontal = FlipHorizontal,
 				EffectType = EffectType,
 				PeriodOffset = PeriodOffset,
-				Repeat = Repeat
+				Repeat = Repeat,
+				MovementCurve = MovementCurve
 			};
 			return result;
 		}
